@@ -1,0 +1,9 @@
+S.No.,Statements,Analysis
+1.,Let  ABC satisfy the hypothesis AC 2 = AB 2 + BC 2 .,"Since we are proving a statement about such a triangle, webegin by taking this."
+2.,"Construct line BDperpendicular to AB, such that BD = BC, and join Ato D.",This is the intuitive step we have talked about that we often need to take for proving theorems.
+3.,"By construction,  ABD is a right triangle, and from the Pythagoras Theorem, we have AD 2 = AB 2 + BD 2 .","We use the Pythagoras theorem, which is already proved."
+4.,"By construction, BD = BC. Therefore, we have AD 2 = AB 2 + BC 2 .",Logical deduction.
+5.,"Therefore, AC 2 = AB 2 + BC 2 = AD 2 .","Using assumption, and previous statement."
+6.,"SinceAC andAD are positive, we have AC = AD.",Using known property of numbers.
+7.,"We have just shownAC = AD. Also BC = BD by construction, andAB is common. Therefore, by SSS,  ABC  ABD.",Using known theorem.
+8.,"Since  ABC   ABD, we get  ABC =  ABD, which is a right angle.","Logical deduction, based on previously established fact."

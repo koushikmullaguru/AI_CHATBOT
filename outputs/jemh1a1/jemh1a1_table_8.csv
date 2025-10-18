@@ -1,0 +1,4 @@
+0,1
+"Since np and mq are integers and mq  0, x is a rational number.","Using properties of integers, and definition of a rational number."
+"This is a contradiction, because we have shown x to be rational, but by our hypothesis, we have x is irrational.",This is what wewerelooking for -acontradiction.
+"The contradiction has arisen because of the faulty assumption that rx is rational. Therefore, rx is irrational.",Logical deduction.

@@ -276,7 +276,7 @@ Normal, Overweight, obese. Tick whichever is relevant
 
 BMI  can  be  calculated  by  adopting  the  following  formula. Divide your weight by square of your height.
 
-$$B M = \frac { \text {weight} \left ( k g \right ) } { \text {height} \left ( m \right ) ^ { 2 } }$$
+<!-- formula-not-decoded -->
 
 - If you measured your weight in kg then measure height in meters.
 - Normal BMI Range = 18 to 25.

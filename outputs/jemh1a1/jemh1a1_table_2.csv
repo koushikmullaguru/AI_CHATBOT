@@ -1,0 +1,4 @@
+S.No.,Statements,Analysis/Comments
+1.,Let x and y be rational numbers.,"Since the result is about rationals, westart with x and y which are rational."
+2.,"Let m x n  , n  0 and p y q  , q  0 where m , n , p and q are integers.",Apply the definition of rationals.
+3.,"So, m p mq np x y n q nq     ","The result talks about the sum of rationals, so we look at x + y ."

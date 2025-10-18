@@ -1,0 +1,5 @@
+Statements,Analysis/Comment
+"We will use proof by contradiction. Let r be a non- zero rational number and x be an irrational number. Let m r n  , where m , n are integers and m  0, n  0. We need to prove that rx is irrational.",
+Assume rx is rational.,"Here, we are assuming the negation of the statement that we need to prove."
+"Then p rx q  , q  0, where p and q are integers.",This follow from the previous statement and the definition of a rational number.
+"Rearranging the equation p rx q  , q  0, and using the fact that m r n  , we get p np x rq mq   .",

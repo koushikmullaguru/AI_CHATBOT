@@ -12,7 +12,7 @@ In  Chapter 2, you have studied different types of polynomials. One type was the
 
 ![Image](outputs/jemh104/jemh104_artifacts/image_000001_2ceb0ec6e1850fc97ab0b970a741b91534b16da3696c6553298925ac8b8fedec.png)
 
-$$\text {Now,} & \quad \text {area of the half} = ( 2 x + 1 ) . \, x \, m ^ { 2 } = ( 2 x ^ { 2 } + x ) \, m ^ { 2 } \\ \text {So,} & \quad \\ \text {Therefore,} & \quad 2 x ^ { 2 } + x - 3 0 0 = 0$$
+<!-- formula-not-decoded -->
 
 So, the breadth of the hall should satisfy the equation 2 x 2 + x - 300 = 0 which is a quadratic equation.
 
@@ -53,29 +53,29 @@ The number of marbles left with John, when he lost 5 marbles = x - 5
 
 The number of marbles left with Jivanti, when she lost 5 marbles = 45 x - 5
 
-$$= 4 0 - x$$
+<!-- formula-not-decoded -->
 
 # PAGE 3
 
 Therefore, their product = ( x - 5) (40 x )
 
-$$= 4 0 x - x ^ { 2 } - 2 0 0 + 5 x$$
+<!-- formula-not-decoded -->
 
-$$= - \, x ^ { 2 } + 4 5 x - 2 0 0$$
+<!-- formula-not-decoded -->
 
-$$S _ { 0 } , \quad - x ^ { 2 } + 4 5 x - 2 0 0 = 1 2 4$$
+<!-- formula-not-decoded -->
 
 (Given that product = 124)
 
-$$\begin{array} { r l } { i . e . , } & - x ^ { 2 } + 4 5 x - 3 2 4 = 0 } \end{array}$$
+<!-- formula-not-decoded -->
 
 i.e.,
 
-$$x ^ { 2 } - 4 5 x + 3 2 4 = 0$$
+<!-- formula-not-decoded -->
 
 Therefore, the number of marbles John had, satisfies the quadratic equation
 
-$$x ^ { 2 } - 4 5 x + 3 2 4 = 0$$
+<!-- formula-not-decoded -->
 
 which is the required representation of the problem mathematically.
 
@@ -85,9 +85,9 @@ Therefore, the cost of production (in rupees) of each toy that day = 55 x So, th
 
 Therefore,
 
-$$x \left ( 5 5 - x \right ) = 7 5 0$$
+<!-- formula-not-decoded -->
 
-$$\begin{array} { r l } { i . e . , } & { 5 5 x - x ^ { 2 } = 7 5 0 \cdot } \\ { i . e . , } & { - x ^ { 2 } + 5 5 x - 7 5 0 = 0 \cdot } \\ { i . e . , } & { x ^ { 2 } - 5 5 x + 7 5 0 = 0 } \end{array}$$
+<!-- formula-not-decoded -->
 
 Therefore, the number of toys produced that day satisfies the quadratic equation x 2 - 55 x + 750 = 0
 
@@ -95,7 +95,7 @@ which is the required representation of the problem mathematically.
 
 Example 2 : Check whether the following are quadratic equations:
 
-$$( i ) \ ( x - 2 ) ^ { 2 } + 1 = 2 x - 3 & & ( i i ) \ x ( x + 1 ) + 8 = ( x + 2 ) \ ( x - 2 ) \\ ( \text {ii} ) \ x \ ( 2 x + 3 ) = x ^ { 2 } + 1 & & ( \text {iv} ) \ \ ( x + 2 ) ^ { 3 } = x ^ { 3 } - 4$$
+<!-- formula-not-decoded -->
 
 ## Solution :
 
@@ -103,9 +103,9 @@ $$( i ) \ ( x - 2 ) ^ { 2 } + 1 = 2 x - 3 & & ( i i ) \ x ( x + 1 ) + 8 = ( x + 
 
 Therefore, ( x - 2) 2 +   1 = 2 x - 3 can be rewritten as
 
-$$x ^ { 2 } - 4 x + 5 = 2 x - 3$$
+<!-- formula-not-decoded -->
 
-$$x ^ { 2 } - 6 x + 8 = 0$$
+<!-- formula-not-decoded -->
 
 i.e.,
 
@@ -119,11 +119,11 @@ Therefore, the given equation is a quadratic equation.
 
 Therefore, the given equation is not a quadratic equation.
 
-$$\text {Here, the given equation is not a quadratic equation.} \\ ( \text {ii} ) \text { Here, } \quad L H S = x \left ( 2 x + 3 \right ) = 2 x ^ { 2 } + 3 x \\ \text {So,} & & x \left ( 2 x + 3 \right ) = x ^ { 2 } + 1 \text { can be rewritten as} \\ & & 2 x ^ { 2 } + 3 x = x ^ { 2 } + 1 \\ \text {Therefore, we get } & & x ^ { 2 } + 3 x - 1 = 0 \\ \text {It is of the form } & & x + b x + c = 0 . \\ \text {So, the given equation is a quadratic equation}$$
+<!-- formula-not-decoded -->
 
 So, the given equation is a quadratic equation.
 
-$$S _ { \ } \text {then} \, & \quad \text {givent equation is a quadratic equation.} \\ ( i v ) \, & \, \text {Here,} \quad L H S = ( x + 2 ) ^ { 3 } = x ^ { 3 } + 6 x ^ { 2 } + 1 2 x + 8 \\ & \quad \text {Therefore,} \quad ( x + 2 ) ^ { 3 } = x ^ { 3 } - 4 \, \text { can be rewritten as} \\ i . e . , & \quad \text {6x^2 + 1 2x + 8 = x ^ { 3 } - 4 } \\ & \quad \text {It is of the form } \alpha ^ { 2 } + b x + c = 0 .$$
+<!-- formula-not-decoded -->
 
 So, the given equation is a quadratic equation.
 
@@ -159,13 +159,13 @@ Example 3 : Find the roots of the equation 2 x 2 - 5 x + 3 = 0, by factorisation
 
 Solution : Let us first split the middle term - 5 x as -2 x -3 x [because (-2 x ) × (-3 x ) = 6 x 2 = (2 x 2 ) × 3].
 
-$$S o , \quad 2 x ^ { 2 } - 5 x + 3 = 2 x ^ { 2 } - 2 x - 3 x + 3 = - 2 x \left ( x - 1 \right ) - 3 ( x - 1 ) = ( 2 x - 3 ) ( x - 1 )$$
+<!-- formula-not-decoded -->
 
-$$N o w , 2 x ^ { 2 } - 5 x + 3 = 0 \, \text { can be rewritten as } ( 2 x - 3 ) ( x - 1 ) = 0 .$$
+<!-- formula-not-decoded -->
 
 So, the values of x for which 2 x 2 - 5 x + 3 = 0 are the same for which (2 x - 3)( x - 1) = 0, i.e., either 2 x - 3 = 0 or x - 1 = 0.
 
-$$N o w , 2 x - 3 = 0 \text { gives } x = \frac { 3 } { 2 } \text { and } x - 1 = 0 \text { gives } x = 1 .$$
+<!-- formula-not-decoded -->
 
 In other words, 1 and 3 2 are the roots of the equation 2 x 2 - 5 x + 3 = 0.
 
@@ -179,11 +179,11 @@ Note that we have found the roots of 2 x 2 -  5 x +  3  =  0 by  factorising 2 x
 
 Example 4 : Find the roots of the quadratic equation 6 x 2 -x - 2 = 0. Solution : We have
 
-$$6 x ^ { 2 } - x - 2 & = 6 x ^ { 2 } + 3 x - 4 x - 2 \\ & = 3 x \left ( 2 x + 1 \right ) - 2 \left ( 2 x + 1 \right ) \\ & = ( 3 x - 2 ) ( 2 x + 1 )$$
+<!-- formula-not-decoded -->
 
 The roots of 6 x 2 -x - 2 = 0 are the values of x for which (3 x - 2)(2 x + 1) = 0 Therefore, 3 x - 2 = 0 or 2 x + 1 = 0, i.e.,
 
-$$x = \frac { 2 } { 3 } \quad \text {or} \quad x = - \frac { 1 } { 2 }$$
+<!-- formula-not-decoded -->
 
 Therefore, the roots of 6 x 2 -x - 2 = 0 are 2 1 . and -3 2
 
@@ -191,11 +191,11 @@ We verify the roots, by checking that 2 1 and 3 2  satisfy 6 x 2 -x - 2 = 0.
 
 Example 5 : Find the roots of the quadratic equation 2 3 2 6 2 0 x x    .
 
-$$\begin{array} { r l } & { \text {Solution } \colon 3 x ^ { 2 } - 2 \sqrt { 6 } x + 2 = 3 x ^ { 2 } - \sqrt { 6 } x - \sqrt { 6 } x + 2 } \\ & { = \sqrt { 3 } x \left ( \sqrt { 3 } x + \sqrt { 2 } \right ) - \sqrt { 2 } \left ( \sqrt { 3 } x - \sqrt { 2 } \right ) } \\ & { = \left ( \sqrt { 3 } x - \sqrt { 2 } \right ) \left ( \sqrt { 3 } x - \sqrt { 2 } \right ) } \end{array}$$
+<!-- formula-not-decoded -->
 
 So, the roots of the equation are the values of x for which
 
-$$3 , \, \text {the} \, 6 0 3 \, \text { of the equation and the values for } x \, 1 \, 0 \, \text { which} \\ \times ( \sqrt { 3 } x - \sqrt { 2 } ) \left ( \sqrt { 3 } \, x - \sqrt { 2 } \right ) = 0 \\ \text {Now, } \sqrt { 3 } x - \sqrt { 2 } = 0 \, \text { for } x = \sqrt { \frac { 2 } { 3 } } \ .$$
+<!-- formula-not-decoded -->
 
 So, this root is repeated twice, one for each repeated factor 3 2 x  .
 
@@ -207,11 +207,11 @@ Example 6 : Find the dimensions of the prayer hall discussed in Section 4.1.
 
 Solution : In  Section  4.1,  we  found  that  if  the  breadth  of  the  hall  is x m, then x satisfies the equation 2 x 2 + x - 300 = 0. Applying the factorisation method, we write this equation as
 
-$$2 x ^ { 2 } - 2 4 x + 2 5 x - 3 0 0 = 0$$
+<!-- formula-not-decoded -->
 
-$$2 x \left ( x - 1 2 \right ) + 2 5 \left ( x - 1 2 \right ) = 0$$
+<!-- formula-not-decoded -->
 
-$$( x - 1 2 ) ( 2 x + 2 5 ) = 0$$
+<!-- formula-not-decoded -->
 
 i.e.,
 
@@ -234,19 +234,19 @@ Thus, the breadth of the hall is 12 m. Its length = 2 x + 1 = 25 m.
 
 The equation ax 2 + bx + c = 0 are given by
 
-$$x = \frac { - b \pm \sqrt { b ^ { 2 } - 4 a c } } { 2 a }$$
+<!-- formula-not-decoded -->
 
-$$\text {If } b ^ { 2 } - 4 a c > 0 , \, \text {we get two distinct real roots } - \frac { b } { 2 a } + \frac { \sqrt { b ^ { 2 } - 4 a c } } { 2 a } \text { and} \\ .$$
+<!-- formula-not-decoded -->
 
-$$- \frac { b } { 2 a } - \frac { \sqrt { b ^ { 2 } - 4 a c } } { 2 a } \, .$$
+<!-- formula-not-decoded -->
 
 # PAGE 8
 
-$$\text {If } b ^ { 2 } - 4 a c = 0 , \text { then } x = - \frac { b } { \gamma a } \pm 0 , \text { } i . e . , \text { } x = - \frac { b } { \gamma a } \text { or } - \frac { b } { \gamma a } \cdot$$
+<!-- formula-not-decoded -->
 
 So, the roots of the equation ax 2 + bx + c = 0 are both b 
 
-$$\tau = - \frac { - \frac { \pm } { 2 a } \pm 0 , \, i . e . , \, x = - \frac { i } { 2 a } \, \text { or } - \frac { - \frac { i } { 2 a } \cdot } { 2 a } \cdot } { 2 a } \\ \tan a x ^ { 2 } + b x + c = 0 \, \text { are both } \frac { - b } { 2 a } .$$
+<!-- formula-not-decoded -->
 
 Therefore, we say that the quadratic equation ax 2 + bx + c = 0 has two equal real roots in this case.
 
@@ -266,7 +266,7 @@ Example 7: Find the discriminant of the quadratic equation 2 x 2  - 4 x + 3 = 0,
 
 Solution : The given equation is of the form ax 2 + bx + c = 0, where a = 2, b = - 4 and c = 3. Therefore, the discriminant
 
-$$b ^ { 2 } - 4 a c = ( - 4 ) ^ { 2 } - ( 4 \times 2 \times 3 ) = 1 6 - 2 4 = - \, 8 < 0$$
+<!-- formula-not-decoded -->
 
 So, the given equation has no real roots.
 
@@ -284,21 +284,21 @@ Fig.  4.2
 
 Now, AB = 13m, and since AB is a diameter,
 
-$$Now , A B = 1 3 m , \, \text {and since AB is a diameter,} \\ \text {Therefor,} \quad & A P B ^ { = } = 9 0 ^ { \circ } \quad ( \text {Why?} ) \\ \text {Therefor,} \quad & A P ^ { 2 } = A B ^ { 2 } \quad ( \text {By Pythagoras theorem} ) \\ \text {i.e.,} \quad & x ^ { 2 } + 1 4 x + 4 9 + x ^ { 2 } = 1 6 9 \\ \text {i.e.,} \quad & 2 x ^ { 2 } + 1 4 x - 1 2 0 = 0 \\ \text {So the distance $\cdot$ the pole from $gate$ B satisfies the equation}$$
+<!-- formula-not-decoded -->
 
 So, the distance ' x ' of the pole from gate B satisfies the equation
 
-$$x ^ { 2 } + 7 x - 6 0 = 0$$
+<!-- formula-not-decoded -->
 
 So,  it would be possible to place the pole if this equation has real roots. To see if this is so or not, let us consider its discriminant. The discriminant is
 
-$$b ^ { 2 } - 4 a c = 7 ^ { 2 } - 4 \times 1 \times ( - 6 0 ) = 2 8 9 > 0 .$$
+<!-- formula-not-decoded -->
 
 So, the given quadratic equation has two real roots, and it is possible to erect the pole on the boundary of the park.
 
 Solving the quadratic equation x 2 + 7 x - 60 = 0, by the quadratic formula, we get
 
-$$( x = \frac { - 7 \pm \sqrt { 2 8 9 } } { 2 } ) = \frac { - 7 \pm 1 7 } { 2 }$$
+<!-- formula-not-decoded -->
 
 Therefore, x = 5 or - 12.
 
@@ -308,13 +308,13 @@ Thus, the pole has to be erected on the boundary of the park at a distance of 5m
 
 Example 9 : Find the discriminant of the equation 3 x 2 - 2 x + 1 3 = 0 and hence find the nature of its roots. Find them, if they are real.
 
-$$\text {Solution} \colon \text {Here} \, a = 3 , b = - \, 2 \text { and } c = \frac { 1 } { 3 } \, .$$
+<!-- formula-not-decoded -->
 
-$$T h e r e , d i s c r i m i n a t \, b ^ { 2 } - 4 a c = ( - \, 2 ) ^ { 2 } - 4 \times 3 \times \frac { 1 } { 3 } \, = 4 - 4 = 0 .$$
+<!-- formula-not-decoded -->
 
 Hence, the given quadratic equation has two equal real roots.
 
-$$T h e r o t s a r e \ \frac { - b } { 2 a } , \frac { - b } { 2 a } , \, i . e . , \ \frac { 2 } { 6 } , \, \frac { 2 } { 6 } , \, i . e . , \, \frac { 1 } { 3 } , \, \frac { 1 } { 3 } .$$
+<!-- formula-not-decoded -->
 
 # PAGE 10
 
@@ -339,7 +339,7 @@ In this chapter, you have studied the following points:
 3. If we can factorise ax 2 + bx + c , a  0, into a product of two linear factors, then the roots of the quadratic equation ax 2 + bx + c = 0 can be found by equating each factor to zero.
 4. Quadratic formula: The roots of a quadratic equation ax 2 + bx + c = 0 are given by
 
-$$\frac { - b \pm \sqrt { b ^ { 2 } - 4 a c } } { 2 a } , \text { provided } b ^ { 2 } - 4 a c \geq 0 .$$
+<!-- formula-not-decoded -->
 
 5. A quadratic equation ax 2 + bx + c = 0 has
 2. (i) two distinct real roots, if b 2 - 4 ac &gt; 0,

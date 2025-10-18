@@ -12,7 +12,7 @@ A polynomial of degree 1 is called a linear polynomial . For example, 2 x - 3, 3
 
 A polynomial of degree 2 is called a quadratic polynomial . The name 'quadratic' has been derived from the word 'quadrate', which means 'square'. 2 2 , 2 3 5 x x  
 
-$$y ^ { 2 } - 2 , \, ^ { u } 2 - x ^ { 2 } + \sqrt { 3 } x , \, \frac { u } { 3 } - 2 u ^ { 2 } + 5 , \sqrt { 5 } v ^ { 2 } - \frac { 2 } { 3 } v , 4 z ^ { 2 } + \frac { 1 } { 7 } \text { are some examples of }$$
+<!-- formula-not-decoded -->
 
 quadratic polynomials (whose coefficients are real numbers). More generally, any quadratic polynomial in x is of the form ax 2 + bx + c , where a , b , c are real numbers and a  0. A polynomial of degree 3 is called a cubic polynomial . Some examples of
 
@@ -28,7 +28,7 @@ MATHEMATICS
 
 a cubic polynomial are 2 x 3 , x 3 , 3 2 , x 3 x 2 + x 3 , 3 x 3  - 2 x 2 + x - 1. In fact, the most general form of a cubic polynomial is
 
-$$a x ^ { 3 } + b x ^ { 2 } + c x + d ,$$
+<!-- formula-not-decoded -->
 
 where, a , b , c , d are real numbers and a  0.
 
@@ -38,7 +38,7 @@ If p ( x ) is a polynomial in x , and if k is any real number, then the value ob
 
 What is the value of p ( x ) = x 2  -3 x - 4 at x = -1? We have :
 
-$$p ( - 1 ) = ( - 1 ) ^ { 2 } - \{ 3 \times ( - 1 ) \} - 4 = 0$$
+<!-- formula-not-decoded -->
 
 Also, note that p (4) = 4 2 - (3  4) - 4 = 0.
 
@@ -46,9 +46,9 @@ As p (-1)  =  0  and p (4)  =  0,  -1  and  4  are  called  the  zeroes  of  the
 
 You have already studied in Class IX, how to find the zeroes of a linear polynomial. For example, if k is a zero of p ( x ) = 2 x + 3, then p ( k ) = 0 gives us
 
-$$2 k + 3 = 0 , i . e . , k = - \frac { 3 } { 2 } \cdot \cdot \cdot$$
+<!-- formula-not-decoded -->
 
-$$2 k + 3 = 0 , 1 . e . , \kappa - 2 \left ( 2 \right ) \\ \text {In general, if } k \text { is a zero of } p ( x ) \equiv a x + b , \text { then } p ( k ) = a k + b = 0 , \text { i.e., } k = \frac { - b } { a } \cdot \\$$
+<!-- formula-not-decoded -->
 
 So, the zero of the linear polynomial ax + b is (Constant term) Coefficient of b a x    .
 
@@ -202,7 +202,7 @@ Fig.  2.10
 
 You have already seen that zero of a linear polynomial ax + b is b a  . We will now try to answer the question raised in Section 2.1 regarding the relationship between zeroes and coefficients of a quadratic polynomial. For this, let us take a quadratic polynomial, say p ( x )  =  2 x 2 -  8 x +  6.  In  Class  IX,  you  have  learnt  how  to  factorise  quadratic polynomials by splitting the middle term. So, here we need to split the middle term '- 8 x ' as a sum of two terms, whose product is 6 × 2 x 2  = 12 x 2 . So, we write
 
-$$2 x ^ { 2 } - 8 x + 6 & = 2 x ^ { 2 } - 6 x - 2 x + 6 = 2 x ( x - 3 ) - 2 ( x - 3 ) \\ & = ( 2 x - 2 ) ( x - 3 ) = 2 ( x - 1 ) ( x - 3 )$$
+<!-- formula-not-decoded -->
 
 # PAGE 10
 
@@ -210,31 +210,31 @@ So, the value of p ( x ) = 2 x 2 - 8 x + 6 is zero when x - 1 = 0 or x - 3 = 0, 
 
 x = 1 or x = 3. So, the zeroes of 2 x - 8 x + 6 are 1 and 3. Observe that :
 
-$$\text {Sum of its zeroes} \quad & = 1 + 3 = 4 = \frac { - ( - 8 ) } { 2 } = \frac { ( \text {Coefficient of } x ) } { \text {Coefficient of } x ^ { 2 } } \\ \text {Product of its zeroes} = 1 \times 3 = 3 = \frac { 6 } { 2 } = \frac { \text {Constant term} } { \text {Coefficient of } x ^ { 2 } }$$
+<!-- formula-not-decoded -->
 
-$$2 \ C o f f i c i e n t o f x ^ { 2 }$$
+<!-- formula-not-decoded -->
 
 Let us take one more quadratic polynomial, say, p ( x ) = 3 x 2 + 5 x -  2.  By the method of splitting the middle term,
 
-$$3 x ^ { 2 } + 5 x - 2 & = 3 x ^ { 2 } + 6 x - x - 2 = 3 x ( x + 2 ) - 1 ( x + 2 ) \\ & = ( 3 x - 1 ) ( x + 2 )$$
+<!-- formula-not-decoded -->
 
 Hence, the value of 3 x 2 + 5 x - 2 is zero when either 3 x - 1 = 0 or x + 2 = 0, i.e., when x = 1 3 or x = -2. So, the zeroes of 3 x 2  + 5 x - 2 are 1 3
 
 and - 2. Observe that :
 
-$$\text {Sum of its zeroes} \cong \frac { 1 } { 3 } + ( - 2 ) = \frac { - \sqrt { 2 } - ( \text {Coefficient of } x ) } { 3 } \\ \text {Product of its zeroes} = \frac { 1 } { 3 } \times ( - 2 ) = \frac { - 2 } { 3 } = \frac { \text {Constant term} } { \text {Coefficient of } x ^ { 2 } }$$
+<!-- formula-not-decoded -->
 
 In general, if  * and  * are the zeroes of the quadratic polynomial p ( x ) = ax 2 + bx + c , a  0, then you know that x - and x - are the factors of p ( x ). Therefore,
 
-$$\alpha ^ { 2 } + b x + c & = k ( x - \alpha ) \left ( x - \beta \right ) , \text { where } k \text { is a constant } \\ x & = k [ x ^ { 2 } - ( \alpha + \beta ) x + \alpha \, \beta ] \\ x & = k x ^ { 2 } - k ( \alpha + \beta ) x + k \, \alpha \, \beta$$
+<!-- formula-not-decoded -->
 
 Comparing the coefficients of x 2 , x and constant terms on both the sides, we get
 
-$$- \, k ( \alpha + \beta ) \, \text { and } \, c = k \alpha \beta .$$
+<!-- formula-not-decoded -->
 
-$$a = k , b = - k ( \alpha + \beta ) \, \text { and } c = k \alpha \beta . \\ \alpha + \beta = \frac { - b } { a } \, , \\ \alpha \beta = \frac { c } { a }$$
+<!-- formula-not-decoded -->
 
-$$a$$
+<!-- formula-not-decoded -->
 
 *  ,  are Greek letters pronounced as 'alpha' and 'beta' respectively. We will use later one more letter '  ' pronounced as 'gamma'.
 
@@ -242,9 +242,9 @@ This gives
 
 # PAGE 11
 
-$$i . e . , \quad \text {sum of zeroes} = \alpha + \beta = - \frac { b } { a } = \frac { - ( \text {Coefficient of } x ) } { \text {Coefficient of } x ^ { 2 } } \, ,$$
+<!-- formula-not-decoded -->
 
-$$\product \text {of zeroes} = \alpha \beta = \frac { c } { a } = \frac { \text {Constant term} } { \text {Coefficient of } x ^ { 2 } } \, .$$
+<!-- formula-not-decoded -->
 
 Let us consider some examples.
 
@@ -254,13 +254,13 @@ Solution :
 
 We have
 
-$$a \quad C o f f i c i e n t o f x ^ { 2 }$$
+<!-- formula-not-decoded -->
 
-$$x ^ { 2 } + 7 x + 1 0 = ( x + 2 ) ( x + 5 )$$
+<!-- formula-not-decoded -->
 
 So, the value of x 2 + 7 x + 10 is zero when x + 2 = 0 or x + 5 = 0, i.e., when x = - 2 or x = -5. Therefore, the zeroes of x 2 + 7 x + 10 are - 2 and - 5. Now,
 
-$$\text {sum of zeros} = - 2 + ( - 5 ) \equiv - ( 7 ) = \frac { - ( 7 ) } { 1 } \equiv \frac { ( \text {Coefficient of } x ) } { \text {Coefficient of } x ^ { 2 } } ,$$
+<!-- formula-not-decoded -->
 
 product of zeroes = 2 10 Constant term ( 2) ( 5) 10 1 Coefficient of x       
 
@@ -268,7 +268,7 @@ Example 3 : Find the zeroes of the polynomial x 2 -  3  and verify the relations
 
 Solution : Recall the identity a 2 -b 2 = ( a -b )( a + b ). Using it, we can write:
 
-$$x ^ { 2 } - 3 = \frac { x - \sqrt { 3 } } { } \left ( x - \sqrt { 3 } \right ) \left ( x + \sqrt { 3 } \right )$$
+<!-- formula-not-decoded -->
 
 So, the value of x 2  - 3 is zero when x = 3  or x =  -3 
 
@@ -276,7 +276,7 @@ Therefore, the zeroes of x 2 - 3 are 3  and 3  
 
 Now,
 
-$$\text {sum of zeros} = \sqrt { 3 } - \sqrt { 3 } = 0 = \frac { - ( \text {Coefficient of } x ) } { \text {Coefficient of } x ^ { 2 } } ,$$
+<!-- formula-not-decoded -->
 
 product of zeroes =    2 3 Constant term 3 3 - 3 1 Coefficient of x      
 
@@ -286,9 +286,9 @@ Example 4 : Find a quadratic polynomial, the sum and product of whose zeroes are
 
 Solution : Let the quadratic polynomial be ax 2 + bx + c , and its zeroes be  and  . We have
 
-$$\alpha + \beta = - \, 3 = \frac { \dot { - } b } { a } \, ,$$
+<!-- formula-not-decoded -->
 
-$$\alpha \beta = 2 = \frac { c } { a } \cdot$$
+<!-- formula-not-decoded -->
 
 and
 
@@ -300,27 +300,27 @@ You can check that any other quadratic polynomial that fits these conditions wil
 
 Let us now look at cubic polynomials. Do you think a similar relation holds between the zeroes of a cubic polynomial and its coefficients?
 
-$$L e t \, u s \, c o n s i d e r \, p ( x ) = 2 x ^ { 3 } - 5 x ^ { 2 } - 1 4 x + 8 .$$
+<!-- formula-not-decoded -->
 
 You can check that p ( x ) = 0 for x = 4, - 2, 1 2  Since p ( x ) can have atmost three zeroes, these are the zeores of 2 x 3  - 5 x 2  - 14 x + 8. Now,
 
-$$\text {sum of the zeroes} = 4 + ( - 2 ) + \frac { 1 } { 2 } = \frac { 5 } { 2 } = \frac { ( - 5 ) } { 2 } = \frac { ( \text {Coefficient of } x ^ { 2 } ) } { \text {Coefficient of } x ^ { 3 } } \, ,$$
+<!-- formula-not-decoded -->
 
 product of the zeroes = 3 1 8 -Constant term 4 ( 2) 4 2 2 Coefficient of x         .
 
 However, there is one more relationship here. Consider the sum of the products of the zeroes taken two at a time. We have
 
-$$\{ 4 \times ( - 2 ) \} + \left \{ ( - 2 ) \times \frac { 1 } { 2 } \right \} + \left \{ \frac { 1 } { 2 } \times 4 \right \}$$
+<!-- formula-not-decoded -->
 
-$$( - 2 ) \{ + \begin{cases} ( - 2 ) \times \frac { 1 } { 2 } \} + \left \{ \frac { 1 } { 2 } \times 4 \right \} & \\ & \quad \cdot \\ & = - 8 - 1 + 2 = - 7 = \frac { - 1 4 } { 2 } = \frac { \text {Coefficient of } x } { \text {Coefficient of } x ^ { 3 } } \, .$$
+<!-- formula-not-decoded -->
 
 In general, it can be proved that if  ,  ,  are the zeroes of the cubic polynomial ax 3 + bx 2 + cx + d , then
 
-$$= \frac { } { a } .$$
+<!-- formula-not-decoded -->
 
 # PAGE 13
 
-$$\alpha + \beta + \gamma = \frac { - b } { a } , \\ \alpha \beta + \beta \gamma + \gamma \alpha = \frac { c } { a } , \\ \alpha \beta \gamma = \frac { - d } { a } .$$
+<!-- formula-not-decoded -->
 
 Let us consider an example.
 
@@ -328,11 +328,11 @@ Example 5* : Verify  that  3,  -1, 1 3  are  the  zeroes  of  the  cubic  pol
 
 Solution : Comparing the given polynomial with ax 3 + bx 2 + cx + d , we get
 
-$$\begin{array} { r l } & { \text {Solution} \colon \, & { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, } \, { \, }$$
+<!-- formula-not-decoded -->
 
 Therefore, 3, -1 and 1 3  are the zeroes of 3 x 3  - 5 x 2  - 11 x - 3. So, we take  = 3,  = -1 and  = 1 3   Now,
 
-$$Now , \quad & \times \bigcup _ { \substack { \alpha + \beta + \gamma = 3 + ( - 1 ) + \left ( - \frac { 1 } { 3 } \right ) = 2 - \frac { 1 } { 3 } = - \frac { 5 } { 3 } } } = - ( - 5 ) = \frac { - b } { a } \, , \\ & \quad \bigcirc ( \beta + \beta \gamma + \gamma \alpha \equiv 3 \times ( - 1 ) + ( - 1 ) \times \left ( \frac { 1 } { 3 } \right ) + \left ( \frac { 1 } { 3 } \right ) \times 3 \equiv 3 + \frac { 1 } { 3 } - 1 \equiv - \frac { 1 } { 3 } \equiv \frac { c } { a } \, , \\ & \quad \cdot \\ & \alpha \beta \gamma = 3 \times ( - 1 ) \times \left ( - \frac { 1 } { 3 } \right ) = 1 = \frac { - ( - 3 ) } { 3 } = \frac { - d } { a } \, . \\ & \quad \cdot \\$$
+<!-- formula-not-decoded -->
 
 * Not from the examination point of view.
 
@@ -363,15 +363,15 @@ In this chapter, you have studied the following points:
 4. A quadratic polynomial can have at most 2 zeroes and a cubic polynomial can have at most 3 zeroes.
 5. If  and  are the zeroes of the quadratic polynomial ax 2 + bx + c , then
 
-$$\alpha + \beta = - \frac { b } { a } \, , \quad \alpha \beta = \frac { c } { a } \, .$$
+<!-- formula-not-decoded -->
 
 .
 
 6. If  ,  ,  are the zeroes of the cubic polynomial ax 3 + bx 2 + cx + d , then
 
-$$\dot { \alpha } + \beta + \gamma = \frac { - b } { a } \, ,$$
+<!-- formula-not-decoded -->
 
-$$\alpha \beta + \beta \gamma + \gamma \alpha = \frac { c } { a } \, ,$$
+<!-- formula-not-decoded -->
 
 - d a    .
 - (ii) 1 2 , 3

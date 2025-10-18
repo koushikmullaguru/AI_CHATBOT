@@ -28,7 +28,7 @@ In your earlier classes, you have seen that any natural number can be written as
 
 Take any collection of prime numbers, say 2, 3, 7, 11 and 23. If we multiply some or all of these numbers, allowing them to repeat as many times as we wish, we can produce a large collection of positive integers (In fact, infinitely many). Let us list a few :
 
-$$7 \times 1 1 \times 2 3 & = 1 7 7 1 \\ 2 \times 3 \times 7 \times 1 1 \times 2 3 & = 1 0 6 2 6 \\ 2 ^ { 2 } \times 3 \times 7 \times 1 1 \times 2 3 & = 2 1 2 5 2$$
+<!-- formula-not-decoded -->
 
 and so on.
 
@@ -38,7 +38,7 @@ We are going to use the factor tree with which you are all familiar. Let us take
 
 ![Image](outputs/jemh101/jemh101_artifacts/image_000002_34dcfb756d05c595b7b754a4b532ef0460473c9671cd16b4db2e1938cf97a0cf.png)
 
-$$3 \times 7 \times 1 1 \times 2 3 = 5 3 1 3 \\ 2 ^ { 3 } \times 3 \times 7 ^ { 3 } = 8 2 3 2$$
+<!-- formula-not-decoded -->
 
 # PAGE 3
 
@@ -62,7 +62,7 @@ The prime factorisation of a natural number is unique, except for the order of  
 
 In general, given a composite number x , we factorise it as x = p 1 p 2 ... p n , where p 1 , p 2 ,..., p n are  primes  and  written  in  ascending  order,  i.e., p 1  p 2  . . .  p n . If we combine the same primes, we will get powers of primes. For example,
 
-$$3 2 7 6 0 = 2 \times 2 \times 2 \times 3 \times 3 \times 5 \times 7 \times 1 3 = 2 ^ { 3 } \times 3 ^ { 2 } \times 5 \times 7 \times 1 3$$
+<!-- formula-not-decoded -->
 
 Once we have decided that the order will be ascending, then the way the number is factorised, is unique.
 
@@ -76,7 +76,7 @@ You have already learnt how to find the HCF and LCM of two positive integers usi
 
 Example 2 : Find the LCM and HCF  of 6 and 20 by the prime factorisation method.
 
-$$\text {Solution} \colon \text {We have} \colon \quad \text {6} = 2 ^ { 1 } \times 3 ^ { 1 } \text { and } \ 2 0 = 2 \times 2 \times 5 = 2 ^ { 2 } \times 5 ^ { 1 } .$$
+<!-- formula-not-decoded -->
 
 You can find HCF(6, 20) = 2 and LCM(6, 20) = 2 × 2 × 3 × 5 = 60, as done in your earlier  classes.
 
@@ -92,13 +92,13 @@ Example 3: Find the HCF of 96 and 404 by the prime factorisation method. Hence, 
 
 Solution : The prime factorisation of 96 and 404 gives :
 
-$$9 6 = 2 ^ { 5 } \times 3 , \, 4 0 4 = 2 ^ { 2 } \times 1 0 1$$
+<!-- formula-not-decoded -->
 
 Therefore, the HCF of these two integers is 2 2  = 4.
 
 Also,
 
-$$L C M \left ( 9 6 , 4 0 4 \right ) = \frac { 9 6 \times 4 0 4 } { H C F ( 9 6 , 4 0 4 ) } = \frac { 9 6 \times 4 0 4 } { 4 } = 9 6 9 6$$
+<!-- formula-not-decoded -->
 
 Example 4 : Find the HCF and LCM of 6, 72 and 120, using the prime factorisation method.
 
@@ -106,19 +106,19 @@ Solution :
 
 We have :
 
-$$6 = 2 \times 3 , \, 7 2 = 2 ^ { 3 } \times 3 ^ { 2 } , \, 1 2 0 = 2 ^ { 3 } \times 3 \times 5$$
+<!-- formula-not-decoded -->
 
 Here, 2 1 and 3 1 are the smallest powers of the common factors 2 and 3, respectively.
 
 So,
 
-$$H C F \left ( 6 , 7 2 , 1 2 0 \right ) = 2 ^ { 1 } \times 3 ^ { 1 } = 2 \times 3 = 6$$
+<!-- formula-not-decoded -->
 
 - 2 3 , 3 2 and 5 1 are the greatest powers of the prime factors 2, 3 and 5 respectively involved in the three numbers.
 
 So,
 
-$$L C M \left ( 6 , 7 2 , 1 2 0 \right ) = 2 ^ { 3 } \times 3 ^ { 2 } \times 5 ^ { 1 } = 3 6 0$$
+<!-- formula-not-decoded -->
 
 Remark : Notice, 6 × 72 × 120  HCF (6, 72, 120) × LCM (6, 72, 120). So, the product of three numbers is not equal to the product of their HCF and LCM.
 
@@ -154,7 +154,7 @@ In Class IX, you were introduced to irrational numbers and many of their propert
 
 Recall, a number ' s ' is called irrational if it cannot be written in the form , p q where p and q are integers and q ≠ 0. Some examples of irrational numbers, with which you are already familiar, are :
 
-$$\sqrt { 2 } , \sqrt { 3 } , \sqrt { 1 5 } , \pi , - \frac { \sqrt { 2 } } { \sqrt { 3 } } , 0 . 1 0 1 1 0 1 1 1 0 1 1 1 1 0 \cdots , e t c .$$
+<!-- formula-not-decoded -->
 
 Before we prove that 2  is irrational, we need the following theorem, whose proof is based on the Fundamental Theorem of Arithmetic.
 
@@ -162,13 +162,13 @@ Theorem 1.2 : Let p be a prime number. If p divides a 2 ,  then  p  divides  a, 
 
 *Proof : Let the prime factorisation of a be as follows :
 
-$$a = p _ { \nu } p _ { 2 } \dots p _ { n } , \text { where } p _ { 1 } , p _ { 2 } , \dots , p _ { n } \text { are primes, not necessarily distinct} .$$
+<!-- formula-not-decoded -->
 
-$$T h e r e f o r \, ; \, a ^ { 2 } = ( p _ { 1 } p _ { 2 } \dots p _ { n } ) ( p _ { 1 } p _ { 2 } \dots p _ { n } ) = p _ { 1 } ^ { 2 } p _ { 2 } ^ { 2 } \dots p _ { n } ^ { 2 } .$$
+<!-- formula-not-decoded -->
 
 Now, we are given that p divides a 2 . Therefore, from the Fundamental Theorem of Arithmetic, it follows that p is  one of the prime factors of a 2 .  However, using the uniqueness part of the Fundamental Theorem of Arithmetic, we realise that the only prime factors of a 2 are p , p , . . ., p . So p is one of p , p , . . ., p .
 
-$$N o w , \sin c e \, a = p _ { 1 } p _ { 2 } \dots p _ { n } , p \text { divides } a .$$
+<!-- formula-not-decoded -->
 
 1 2 n 1 2 n .
 
@@ -188,7 +188,7 @@ So, we can find integers r and s ( ≠ 0) such that 2  = r s .
 
 Suppose r and s have a common factor other than 1. Then, we divide by the common factor to get , 2 a b  where a and b are coprime.
 
-$$S o , b \sqrt { 2 } = a .$$
+<!-- formula-not-decoded -->
 
 Squaring on both sides and rearranging, we get 2 b 2 = a 2 . Therefore, 2 divides a 2 .
 
@@ -216,7 +216,7 @@ That is, we can find integers a and b ( ≠ 0) such that 3  = a b 
 
 Suppose a and b have  a  common factor other than 1, then we can divide by the common factor, and assume that a and b are coprime.
 
-$$S o , \, b \sqrt { 3 } = a \cdot$$
+<!-- formula-not-decoded -->
 
 Squaring on both sides, and rearranging, we get 3 b 2 = a 2 .
 
@@ -283,7 +283,7 @@ So, we conclude that  3 2  is irrational.
 2. Prove that  3 2 5  is irrational.
 3. Prove that the following are irrationals :
 
-$$( \mathbf i ) \ \frac { 1 } { \sqrt { 2 } } \quad ( \mathbf i ) ^ { \mathbf n } \, 7 \sqrt { 5 } \quad ( \mathbf i ) ^ { \mathbf n } \, 6 + \sqrt { 2 }$$
+<!-- formula-not-decoded -->
 
 - 2
 
@@ -304,6 +304,6 @@ You have seen that :
 
 HCF ( p , q , r ) × LCM ( p , q , r )  p × q × r , where p , q , r are positive integers (see Example 8). However, the following results hold good for three numbers p , q and r :
 
-$$o \cdot q \cdot r \cdot \underline { I }$$
+<!-- formula-not-decoded -->
 
-$$\widetilde { \ } L C M \left ( p , q , r \right ) & = \frac { p \cdot q \cdot r \cdot H C F \left ( p , q , r \right ) } { H C F \left ( p , q \right ) \cdot H C F \left ( q , r \right ) \cdot H C F \left ( p , r \right ) } \\ H C F \left ( p , q , r \right ) & = \frac { p \cdot q \cdot r \cdot L C M \left ( p , q , r \right ) } { L C M \left ( p , q \right ) \cdot L C M \left ( q , \, r \right ) \cdot L C M \left ( p , r \right ) }$$
+<!-- formula-not-decoded -->

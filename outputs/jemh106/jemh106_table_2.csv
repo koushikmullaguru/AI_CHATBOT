@@ -1,0 +1,13 @@
+0,1,2,3,4,5,6
+"i.e.,",AM PN,=,CA RP,,,(3)
+"Also,", MAC,=, NPR,,[From (2)],(4)
+"So, from (3) and (4),", AMC,~, PNR,,(SASsimilarity),(5)
+"(ii) From (5),",CM RN,=,CA RP,,,(6)
+But,CA RP,=,AB PQ,,[From (1)],(7)
+"Therefore,",CM RN,=,AB PQ,,[From (6) and (7)],(8)
+"(iii) Again,",AB PQ,=,BC QR,,[From,(1)]
+"Therefore,",CM RN,=,BC QR,,[From (8)],(9)
+"Also, i.e.,",CM RN CM RN,= =,AB PQ BM QN,2 BM 2 QN ,,(10)
+"i.e.,",CM RN,,BC QR,BM,[From (9) and (10)],
+,,=,,QN,,
+"Therefore,", CMB,~, RNQ,,(SSS similarity),

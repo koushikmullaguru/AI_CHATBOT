@@ -26,9 +26,9 @@ Let us try this approach.
 
 Denote the number of rides that Akhila had by x , and the number of times she played Hoopla by y . Now the situation can be represented by the two equations:
 
-$$y = \frac { 1 } { 2 } x$$
+<!-- formula-not-decoded -->
 
-$$3 x + 4 y = 2 0$$
+<!-- formula-not-decoded -->
 
 Can we find the solutions of this pair of equations? There are several ways of finding these, which we will study in this chapter.
 
@@ -52,7 +52,7 @@ Let us now write down, and compare, the values of 1 1 1 2 2 2 , and a b c c a b 
 
 # PAGE 3
 
-$$a n d$$
+<!-- formula-not-decoded -->
 
 Table 3.1
 
@@ -64,14 +64,9 @@ Table 3.1
 
 From the table above, you can observe that if the lines represented by the equation
 
-$$a _ { 1 } x + b _ { 1 } y + c _ { 1 } = 0$$
+<!-- formula-not-decoded -->
 
-$$a _ { 1 } x + b _ { 1 } y + c _ { 1 } = 0 
- a _ { 2 } x + b _ { 2 } y + c _ { 2 } = 0 
- a _ { 2 } = ( i ) \, i n s e c t i n g , \, \text {then} \, \frac { a _ { 1 } } { a _ { 2 } } \neq \frac { b _ { 1 } } { b _ { 2 } } . 
- ( i ) \, \text {cicent, then} \, \frac { a _ { 1 } } { a _ { 2 } } = \frac { b _ { 1 } } { b _ { 2 } } = \frac { c _ { 1 } } { c _ { 2 } } . 
- ( i i ) \, \text {parallel, then} \, \frac { a _ { 1 } } { a _ { 2 } } = \frac { b _ { 1 } } { b _ { 2 } } \neq \frac { c _ { 1 } } { c _ { 2 } } . 
- \text {In fact, the converse is also true for any pair of}$$
+<!-- formula-not-decoded -->
 
 In fact, the converse is also true for any pair of lines. You can verify them by considering some more examples by yourself.
 
@@ -79,9 +74,9 @@ Let us now consider some more examples to illustrate it.
 
 Example 1 : Check graphically whether the pair of equations
 
-$$x + 3 y = 6$$
+<!-- formula-not-decoded -->
 
-$$2 x - 3 y = 1 2$$
+<!-- formula-not-decoded -->
 
 is consistent. If so, solve them graphically.
 
@@ -105,13 +100,13 @@ Fig.  3.1
 
 Example 2 : Graphically, find whether the following pair of equations has no solution, unique solution or infinitely many solutions:
 
-$$5 x - 8 y + 1 = 0$$
+<!-- formula-not-decoded -->
 
-$$3 x - \frac { 2 4 } { 5 } y + \frac { 3 } { 5 } = 0$$
+<!-- formula-not-decoded -->
 
 Solution : Multiplying Equation (2) by 5 , 3 we get
 
-$$5 x - 8 y + 1 = 0$$
+<!-- formula-not-decoded -->
 
 But,  this is the same as Equation (1). Hence the lines represented by Equations (1) and (2) are coincident. Therefore, Equations (1) and (2) have infinitely many solutions.
 
@@ -123,9 +118,9 @@ Example 3 : Champa went to a 'Sale' to purchase some pants and skirts. When her 
 
 Solution : Let us denote the number of pants by x and the number of skirts by y. Then the equations formed are :
 
-$$y = 2 x - 2$$
+<!-- formula-not-decoded -->
 
-$$y = 4 x - 4$$
+<!-- formula-not-decoded -->
 
 Fig.  3.2
 
@@ -159,7 +154,7 @@ following pairs of linear equations intersect at a point, are parallel or coinci
 
 - (i) 5 x - 4 y + 8 = 0 7 x + 6 y - 9 = 0
 
-$$\begin{matrix} ( \ddot { \mathbf i } \dot { \mathbf } ) & 6 x - 3 y + 1 0 = 0 \\ & 2 x - y + 9 = 0 \end{matrix}$$
+<!-- formula-not-decoded -->
 
 3. On comparing the ratios 1 1 2 2 , a b a b and 1 2 c c , find out whether the following pair of linear
 
@@ -178,7 +173,7 @@ equations are consistent, or inconsistent.
 7. Draw the graphs of the equations x -y + 1 = 0 and 3 x + 2 y - 12 = 0. Determine the coordinates of the vertices of the triangle formed by these lines and the x -axis, and shade the triangular region.
 - (ii) parallel lines
 
-$$( \mathbf i ) \ 9 x + 3 y + 1 2 = 0 \\ 1 8 x + 6 y + 2 4 = 0$$
+<!-- formula-not-decoded -->
 
 # PAGE 7
 
@@ -192,9 +187,9 @@ In the previous section, we discussed how to solve a pair of linear equations gr
 
 Example 4 : Solve the following pair of equations by substitution method:
 
-$$7 x - 1 5 y = 2 \cdots$$
+<!-- formula-not-decoded -->
 
-$$x + 2 y = 3$$
+<!-- formula-not-decoded -->
 
 ## Solution :
 
@@ -202,18 +197,17 @@ Step 1 : We pick either of the equations and write one variable in terms of the 
 
 and write it as
 
-$$x + 2 y = 3 \begin{matrix} y & 1 \\ x & 3 \end{matrix}$$
+<!-- formula-not-decoded -->
 
 Step 2 : Substitute the value of x in Equation (1). We get
 
-$$\begin{array} { c } { { 1 } \text {step} \, 2 \colon \text {substitute the value of } 6 \text { in } \text {Eqn} ( 1 ) . \text { we } } \\ { { 7 ( 3 - 2 y ) - 1 5 y = 2 } } \\ { i . e . , } & { \times } & { \text {up} - 2 y = - 1 9 } \\ { \text {Therefor, } } & { \times } & { y = \frac { 1 9 } { 2 9 } } \\ { { 9 } \text {Step} \, 3 \colon \text {Substituting this value of } y \text { in } \text {Equation } ( 3 ) , \text { with } } \end{array}$$
+<!-- formula-not-decoded -->
 
 Step 3 : Substituting this value of y in Equation (3), we get
 
-$$x = 3 - 2 \left ( \frac { 1 9 } { 2 9 } \right ) = \frac { 4 9 } { 2 9 } \\ \cdot 
- 1 0$$
+<!-- formula-not-decoded -->
 
-$$T h e r e f o r e , t h e s o l u t i o n i s x = \frac { 4 9 } { 2 9 } \, , y = \frac { 1 9 } { 2 9 } \, .$$
+<!-- formula-not-decoded -->
 
 # PAGE 8
 
@@ -231,9 +225,9 @@ Example 5 : Solve the following question-Aftab tells his daughter, 'Seven years 
 
 Solution : Let s and t be the ages (in years) of Aftab and his daughter, respectively. Then, the pair of linear equations that represent the situation is
 
-$$s - 7 = 7 \, ( t - 7 ) , i . e . , s - 7 t + 4 2 = 0$$
+<!-- formula-not-decoded -->
 
-$$s + 3 = 3 \, ( t + 3 ) , \, i . e . , \, s - 3 t = 6$$
+<!-- formula-not-decoded -->
 
 and
 
@@ -241,13 +235,13 @@ Using Equation (2), we get s = 3 t + 6.
 
 Putting this value of s in Equation (1), we get
 
-$$( 3 t + 6 ) - 7 t + 4 2 = 0 ,$$
+<!-- formula-not-decoded -->
 
 i.e., 4 t = 48, which gives t = 12.
 
 Putting this value of t in Equation (2), we get
 
-$$s = 3 \, ( 1 2 ) + 6 = 4 2$$
+<!-- formula-not-decoded -->
 
 # PAGE 9
 
@@ -259,17 +253,17 @@ Example 6 : In a shop the cost of 2 pencils and 3 erasers is ` 9 and the cost of
 
 Solution : The pair of linear equations formed were:
 
-$$2 x + 3 y = 9$$
+<!-- formula-not-decoded -->
 
-$$4 x + 6 y = 1 8$$
+<!-- formula-not-decoded -->
 
 We first express the value of x in terms of y from the equation 2 x + 3 y = 9, to get
 
-$$x = \frac { 9 - 3 y } { 2 }$$
+<!-- formula-not-decoded -->
 
 Now we substitute this value of x in Equation (2), to get
 
-$$\frac { 4 ( 9 - 3 y ) } { 2 } + 6 y = 1 8 \sqrt { 2 }$$
+<!-- formula-not-decoded -->
 
 18 - 6
 
@@ -283,7 +277,7 @@ y
 
 = 18
 
-$$i . e ,$$
+<!-- formula-not-decoded -->
 
 This statement is true for all values of y . However, we do not get a specific value of y as a solution. Therefore, we cannot obtain a specific value of x . This situation has arisen because both the given equations are the same. Therefore, Equations (1) and (2) have infinitely many solutions. We cannot find a unique cost of a pencil and an eraser, because there are many common solutions, to the given situation.
 
@@ -293,9 +287,9 @@ x + 2 y - 4 = 0 and 2 x + 4 y - 12 = 0.  Will the rails cross each other?
 
 Solution : The pair of linear equations formed were:
 
-$$x + 2 y - 4 = 0$$
+<!-- formula-not-decoded -->
 
-$$2 x + 4 y - 1 2 = 0$$
+<!-- formula-not-decoded -->
 
 We express x in terms of y from Equation (1) to get
 
@@ -307,7 +301,7 @@ y
 
 Now, we substitute this value of x in Equation (2) to get
 
-$$2 ( 4 - 2 y ) + 4 y - 1 2 = 0$$
+<!-- formula-not-decoded -->
 
 # PAGE 10
 
@@ -332,16 +326,15 @@ Therefore, the equations do not have a common solution. So, the two rails will n
 11. (iv) The taxi charges in a city consist of a fixed charge together with the charge for the distance covered. For a distance of 10 km, the charge paid is ` 105 and for a journey of 15 km, the charge paid is ` 155. What are the fixed charges and the charge per km? How much does a person have to pay for travelling a distance of 25 km?
 12. (v) A fraction becomes 9 11 , if  2 is added to both the numerator and the denominator. If, 3 is added to both the numerator and the denominator it becomes 5 6 . Find the fraction.
 
-$$( \mathbf i ) _ { S - t } = 3 
- \cdot \begin{matrix} s \\ \frac { S } { 3 } + \frac { t } { 2 } = 6 \end{matrix}$$
+<!-- formula-not-decoded -->
 
-$$8 - 1 2 = 0$$
+<!-- formula-not-decoded -->
 
 - 4 = 0
 
 # PAGE 11
 
-$$a n d$$
+<!-- formula-not-decoded -->
 
 - (vi) Five years hence, the age of Jacob will be three times that of his son. Five years ago, Jacob's age was seven times that of his son. What are their present ages?
 
@@ -353,31 +346,31 @@ Example 8 : The ratio of incomes of two persons is 9 : 7 and the ratio of their 
 
 Solution : Let us denote the incomes of the two person by ` 9 x and ` 7 x and their expenditures by ` 4 y and ` 3 y respectively. Then the equations formed in the situation is given by :
 
-$$9 x - 4 y = 2 0 0 0$$
+<!-- formula-not-decoded -->
 
-$$7 x - 3 y = 2 0 0 0$$
+<!-- formula-not-decoded -->
 
 Step 1 : Multiply Equation (1) by 3 and Equation (2) by 4 to make the coefficients of y equal. Then we get the equations:
 
-$$2 7 x - 1 2 y = 6 0 0 0$$
+<!-- formula-not-decoded -->
 
-$$2 8 x - 1 2 y = 8 0 0 0 \times 1 2$$
+<!-- formula-not-decoded -->
 
 Step 2 : Subtract Equation (3) from Equation (4) to eliminate y , because the coefficients of y are the same. So, we get
 
-$$( 2 8 x - 2 7 x ) - ( 1 2 y - 1 2 y ) = 8 0 0 0 - 6 0 0 0$$
+<!-- formula-not-decoded -->
 
-$$x = 2 0 0 0$$
+<!-- formula-not-decoded -->
 
 i.e.,
 
 Step 3 : Substituting this value of x in (1), we get
 
-$$9 ( 2 0 0 0 ) - 4 y =$$
+<!-- formula-not-decoded -->
 
-$$y = 2 0 0 0$$
+<!-- formula-not-decoded -->
 
-$$i . e ,$$
+<!-- formula-not-decoded -->
 
 So, the solution of the equations is x = 2000, y = 4000. Therefore, the monthly incomes of the persons are ` 18,000 and ` 14,000, respectively.
 
@@ -410,21 +403,21 @@ Now to illustrate it, we shall solve few more examples.
 
 Example 9 : Use elimination method to find all possible solutions of the following pair of linear equations :
 
-$$2 x + 3 y = 8$$
+<!-- formula-not-decoded -->
 
-$$4 x + 6 y \equiv 7$$
+<!-- formula-not-decoded -->
 
 ## Solution :
 
 Step  1  : Multiply  Equation  (1)  by  2  and  Equation  (2)  by  1  to  make  the coefficients of x equal. Then we get the equations as :
 
-$$4 x + 6 y = 1 6$$
+<!-- formula-not-decoded -->
 
-$$4 x + 6 y = 7$$
+<!-- formula-not-decoded -->
 
 Step 2 : Subtracting Equation (4) from Equation (3),
 
-$$( 4 x - 4 x ) + ( 6 y - 6 y ) = 1 6 - 7$$
+<!-- formula-not-decoded -->
 
 i.e., 0 = 9, which is a false statement.
 
@@ -440,21 +433,21 @@ When the digits are reversed, x becomes the unit's digit and y becomes the ten's
 
 According to the given condition.
 
-$$i _ { . } , \quad & 1 1 ( x + y ) + ( 1 0 y + x ) = 6 6 \\ i _ { . } , \quad & x + y = 6$$
+<!-- formula-not-decoded -->
 
 We are also given that the digits differ by 2, therefore,
 
-$$\text { either } & & x - y = 2 & & \bigcup ( 2 )$$
+<!-- formula-not-decoded -->
 
 or
 
-$$y - x = 2 \int ( y ) ( x )$$
+<!-- formula-not-decoded -->
 
 If x -y = 2, then solving (1) and (2) by elimination, we get x = 4 and y = 2.
 
 In this case, we get the number 42.
 
-$$\text {If} y - x = 2 , \text { then solving } ( 1 ) \text { and } ( 3 ) \text { by elimination, we get } x = 2 \text { and } y = 4 .$$
+<!-- formula-not-decoded -->
 
 In this case, we get the number 24.
 
@@ -470,7 +463,7 @@ Verification : Here 42 + 24 = 66 and 4 - 2 = 2. Also 24 + 42 = 66 and 4 - 2 = 2.
 2. (i) x + y = 5 and 2 x - 3 y = 4
 3. (iii) 3 x - 5 y - 4 = 0 and 9 x = 2 y + 7
 
-$$\begin{pmatrix} ( i ) & 3 x + 4 y = 1 0 & \text {and} & 2 x - 2 y = 2 \\ & & & \\ ( i v ) & \frac { x } { 2 } + \frac { 2 y } { 3 } = - 1 & \text {and} & x - \frac { y } { 3 } = 3 \end{pmatrix}$$
+<!-- formula-not-decoded -->
 
 2. Form the pair of linear equations in the following problems, and find their solutions (if they exist) by the elimination method :
 2. (i) If we add 1 to the numerator and subtract 1 from the denominator, a fraction reduces

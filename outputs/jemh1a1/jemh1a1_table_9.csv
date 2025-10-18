@@ -1,0 +1,9 @@
+Statements,Analysis/Comment
+Let us assume that the statement is note true.,"As we saw earlier, this is the starting point for an argument using'proofbycontradiction'."
+"So we suppose that there exists a prime number p > 3, which is not of the form 6 n + 1 or 6 n + 5, where n is a whole number.",This is the negation of the statement in the result.
+"Using Euclid's division lemmaondivision by 6, and using the fact that p is not of the form 6 n + 1 or 6 n + 5, we get p = 6 n or 6 n + 2 or 6 n + 3 or 6 n + 4.",Using earlier proved results.
+"Therefore, p is divisible by either 2 or 3.",Logical deduction.
+"So, p is not a prime.",Logical deduction.
+"This is a contradiction, because by our hypothesis p is prime.",Precisely what we want!
+"The contradiction has arisen, because we assumed that there exists a prime number p > 3 which is not of the form 6 n + 1 or 6 n + 5.",
+"Hence, every prime number greater than 3 is of the form 6 n + 1 or 6 n + 5.",We reach the conclusion.

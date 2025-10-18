@@ -1,0 +1,7 @@
+ A,0°,30°,45°,60°,90°
+sinA,0,1 2,1 2,3 2,1
+cos A,1,3 2,1 2,1 2,0
+tanA,0,1 3,1,3,Not defined
+cosec A,Not defined,2,2,2 3,1
+sec A,1,2 3,2,2,Not defined
+cotA,Not defined,3,1,1 3,0
