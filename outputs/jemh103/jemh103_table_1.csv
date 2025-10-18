@@ -1,0 +1,4 @@
+Sl No.,Pair of lines,1 2 a a,1 2 b b,1 2 c c,Compare the ratios,Graphical representation,Algebraic interpretation
+1.,x - 2 y = 0 3 x + 4 y - 20 = 0,1 3,2 4 -,0 20 -,1 1 2 2 a b a b ≠,Intersecting lines,Exactly one solution (unique)
+2.,2 x + 3 y -9=0 4 x + 6 y - 18 = 0,2 4,3 6,9 18 - -,1 1 1 2 2 2 a b c a b c = =,Coincident lines,Infinitely many solutions
+3.,x + 2 y - 4 = 0 2 x + 4 y - 12 = 0,1 2,2 4,4 12 - -,1 1 1 2 2 2 a b c a b c = ≠,Parallel lines,No solution
