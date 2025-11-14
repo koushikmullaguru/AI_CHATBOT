@@ -31,10 +31,14 @@ from openai import AsyncOpenAI
 from rank_bm25 import BM25Okapi
 from nltk.tokenize import word_tokenize
 import nltk
+from urllib.error import URLError
+
 try:
-    nltk.data.find('tokenizers/punkt')
-except nltk.downloader.DownloadError:
-    nltk.download("punkt", quiet=True)
+    nltk.download('punkt')
+except URLError as e:
+    print(f"Network error during download: {e}")
+except Exception as e:
+    print(f"An unexpected error occurred: {e}")
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
