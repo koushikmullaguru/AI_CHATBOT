@@ -381,7 +381,7 @@ async def initialize_clients():
     if LLM_API_KEY:
         try:
             llm_client = AsyncOpenAI(base_url=OPENROUTER_BASE_URL, api_key=LLM_API_KEY)
-            llm_client.extra_headers = {"HTTP-Referer": os.getenv("YOUR_SITE_URL", "http://localhost:8000"), "X-Title": "Hybrid Qdrant RAG"}
+            llm_client.extra_headers = {"HTTP-Referer": os.getenv("YOUR_SITE_URL", "http://localhost:8501"), "X-Title": "Hybrid Qdrant RAG"}
             print(f"✅ LLM client initialized: {LLM_MODEL_NAME}")
         except Exception as e: print(f"❌ LLM client init failed: {e}"); llm_client = None
     else: print("❌ OPENROUTER_API_KEY not found."); llm_client = None
