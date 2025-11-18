@@ -1,7 +1,0 @@
-Statements,Analysis/Comment
-"Let XYbethe given line, P a point not lyingonXY and PM, PA 1 , PA 2 , . . . etc., be the line segments drawn from P to the points of the line XY, out of which PM is the smallest (see Fig. A1.5).","Since we have to prove that out of all PM, PA 1 , PA 2 , . . . etc., the smallest is perpendi- cular to XY, we start by taking these line segments."
-Let PM be not perpendicular to XY,This is the negation of the statement to be proved by contradiction.
-"Draw a perpendicular PN on the line XY, shown by dotted lines in Fig. A1.5.",We often need constructions to prove our results.
-"PN is the smallest of all the line segments PM, PA 1 , PA 2 , . . . etc., which means PN < PM.",Side of right triangle is less than the hypotenuse and known property of numbers.
-This contradicts our hypothesis that PM is the smallest of all such line segments.,Precisely what we want!
-"Therefore, the line segment PM is perpendicular to XY.",We reach the conclusion.
