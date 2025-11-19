@@ -160,7 +160,10 @@ class SemanticCacheWrapper:
 
 
     def save_cache(self, query: str, answer: str):
-        if not self.q_client or not self.embed_model: return 
+        # FIX: Ensure we check both dependencies before starting the task
+        if not self.q_client or not self.embed_model: 
+            logging.info("Skipping cache save: Qdrant or embedding model not available in SemanticCacheWrapper.")
+            return 
         asyncio.create_task(self._save_cache_task(query, answer))
 
     async def _save_cache_task(self, query: str, answer: str):
@@ -275,7 +278,8 @@ async def log_cache_eviction_status(clients: Dict[str, Any]):
     Conceptual function to check cache size and alert if eviction is missed.
     This runs every RAG query.
     """
-    if clients.get('qdrant'):
+    # Use clients.get('cache') directly as the wrapper is None if not initialized
+    if clients.get('qdrant') and clients.get('cache'): 
         try:
             count_result = clients['qdrant'].count(collection_name=QDRANT_CACHE_COLLECTION, exact=True)
             current_size = count_result.count
@@ -287,6 +291,8 @@ async def log_cache_eviction_status(clients: Dict[str, Any]):
                 
         except Exception as e:
             logging.error(f"Failed to check cache eviction status: {e}")
+    elif not clients.get('cache'):
+        logging.debug("Cache not available, skipping cache eviction status check")
 
 # ==================== END UTILITY FUNCTIONS ====================
 
@@ -327,8 +333,6 @@ def build_bm25_index(q_client: QdrantClient):
 async def initialize_clients():
     """
     Initializes clients and assigns them to module-level globals.
-    
-    TTL REMOVED: Cache collection setup no longer creates or references the expiry_timestamp index.
     """
     global qdrant_client, embed_model, reranker, llm_client, semantic_cache
     
@@ -345,9 +349,20 @@ async def initialize_clients():
         
     # 2. Qdrant client
     try:
-        qdrant_client = QdrantClient(
-            url=os.getenv("QDRANT_HOST"), api_key=os.getenv("QDRANT_API_KEY"), port=int(os.getenv("QDRANT_PORT", 6333)),
-        )
+        qdrant_url = os.getenv("QDRANT_URL")
+        qdrant_api_key = os.getenv("QDRANT_API_KEY")
+        
+        if qdrant_url:
+            # If QDRANT_URL is provided, use it directly
+            qdrant_client = QdrantClient(url=qdrant_url, api_key=qdrant_api_key)
+        else:
+            # Fallback to separate host and port
+            qdrant_client = QdrantClient(
+                url=os.getenv("QDRANT_HOST"),
+                api_key=qdrant_api_key,
+                port=int(os.getenv("QDRANT_PORT", 6333)),
+            )
+            
         qdrant_client.get_collection(QDRANT_COLLECTION_NAME)
         print(f"✅ Qdrant connected: {QDRANT_COLLECTION_NAME}")
         
@@ -381,16 +396,33 @@ async def initialize_clients():
     if LLM_API_KEY:
         try:
             llm_client = AsyncOpenAI(base_url=OPENROUTER_BASE_URL, api_key=LLM_API_KEY)
+            # IMPORTANT: Revert Referer to 8000 (old setting) if 8501 causes issues, 
+            # or keep 8501 if it matches your deployment environment. 
+            # Sticking to the environment variable fallback here.
             llm_client.extra_headers = {"HTTP-Referer": os.getenv("YOUR_SITE_URL", "http://localhost:8501"), "X-Title": "Hybrid Qdrant RAG"}
             print(f"✅ LLM client initialized: {LLM_MODEL_NAME}")
-        except Exception as e: print(f"❌ LLM client init failed: {e}"); llm_client = None
-    else: print("❌ OPENROUTER_API_KEY not found."); llm_client = None
+        except Exception as e:
+            print(f"❌ LLM client init failed: {e}")
+            llm_client = None
+    else:
+        print("❌ OPENROUTER_API_KEY not found.")
+        llm_client = None
 
     # 4. Initialize Semantic Cache Wrapper
     if qdrant_client and embed_model:
-        semantic_cache = SemanticCacheWrapper(q_client=qdrant_client, embed_model=embed_model, collection_name=QDRANT_CACHE_COLLECTION, threshold=SEMANTIC_CACHE_THRESHOLD)
-        print("✅ Semantic Cache Wrapper initialized.")
-    else: print("❌ Semantic Cache disabled due to missing Qdrant/Embedding client.")
+        try:
+            semantic_cache = SemanticCacheWrapper(q_client=qdrant_client, embed_model=embed_model, collection_name=QDRANT_CACHE_COLLECTION, threshold=SEMANTIC_CACHE_THRESHOLD)
+            print("✅ Semantic Cache Wrapper initialized.")
+        except Exception as e:
+            print(f"❌ Semantic Cache Wrapper initialization failed: {e}")
+            semantic_cache = None
+    else:
+        print("❌ Semantic Cache disabled due to missing Qdrant/Embedding client.")
+        if not qdrant_client:
+            print("   - Qdrant client is not initialized")
+        if not embed_model:
+            print("   - Embedding model is not initialized")
+        semantic_cache = None
 
     # 5. Reranker
     try:
@@ -443,6 +475,16 @@ def setup_rag_services():
     
     print("RAG service setup complete.")
     
+    # Print final status of all clients
+    print("\n--- Final Service Status ---")
+    print(f"Qdrant Client: {'✅' if clients.get('qdrant') else '❌'}")
+    print(f"Embedding Model: {'✅' if clients.get('embed') else '❌'}")
+    print(f"Reranker: {'✅' if clients.get('reranker') else '❌'}")
+    print(f"LLM Client: {'✅' if clients.get('llm') else '❌'}")
+    print(f"Semantic Cache: {'✅' if clients.get('cache') else '❌'}")
+    print(f"BM25 Index: {'✅' if clients.get('bm25_index') else '❌'}")
+    print("---------------------------\n")
+    
     return clients
 
 
@@ -479,10 +521,6 @@ async def bm25_search_core(bm25_idx: BM25Okapi, bm25_meta: List[Dict[str, Any]],
         return []
 
 async def hybrid_retrieve_and_rerank_chunks(clients: Dict[str, Any], query: str, initial_k: int = INITIAL_RETRIEVAL_K) -> Tuple[List[SearchResultHelper], Set[str]]:
-    
-    # 1. Retrieve using explicit clients
-    # vector_results = await search_index_core(clients['qdrant'], clients['embed'], query, initial_k)
-    # bm25_results = await bm25_search_core(clients['bm25_index'], clients['bm25_metadata'], clients['bm25_corpus'], query, initial_k)
 
     vector_results, bm25_results = await asyncio.gather(
     search_index_core(clients['qdrant'], clients['embed'], query, initial_k),
@@ -525,27 +563,32 @@ async def hybrid_retrieve_and_rerank_chunks(clients: Dict[str, Any], query: str,
 async def generate_rag_response(clients: Dict[str, Any], query: str, session_id: str, use_retrieval_k: int = INITIAL_RETRIEVAL_K) -> RAGResponseHelper:
     
     # 1. Check if all required clients were passed and exist
-    required_keys = ['llm', 'cache']
-    if not all(clients.get(k) is not None for k in required_keys):
-        raise Exception("Service not fully initialized or Semantic Cache is disabled. Check LLM/Cache clients.")
+    if clients.get('llm') is None:
+        raise Exception("Service not fully initialized. LLM client is not available.")
+    
+    cache_wrapper = clients.get('cache')
+    if cache_wrapper is None:
+        logging.warning("Semantic Cache is disabled. The application will continue without caching.")
 
     # 1.5 LOG EVICTION STATUS (Conceptual check)
     await log_cache_eviction_status(clients)
 
     # 2. PRIMARY CACHE CHECK: Check the cache using the RAW, unexpanded query (for semantic similarity/repetition)
-    cached_answer_raw = await clients['cache'].check_cache(query) 
-    if cached_answer_raw:
-        logging.info(f"✅ CACHE HIT on RAW query: {query}")
-        await save_chat_entry(session_id, query, cached_answer_raw, ["[Semantic Cache]"], [])
-        return RAGResponseHelper(query=query, answer=cached_answer_raw, sources=["[Semantic Cache]"], session_id=session_id, cache_status="HIT")
+    cached_answer_raw = None
+    if cache_wrapper:
+        cached_answer_raw = await cache_wrapper.check_cache(query)
+        if cached_answer_raw:
+            logging.info(f"✅ CACHE HIT on RAW query: {query}")
+            await save_chat_entry(session_id, query, cached_answer_raw, ["[Semantic Cache]"], [])
+            return RAGResponseHelper(query=query, answer=cached_answer_raw, sources=["[Semantic Cache]"], session_id=session_id, cache_status="HIT")
     
     # 3. EXPAND QUERY
     history_records = await get_chat_history(session_id, CHAT_HISTORY_LIMIT)
     expanded_query = await expand_query_with_context(query, history_records)
     
     # 4. SECONDARY CACHE CHECK (Only needed if expansion occurred)
-    if expanded_query != query:
-        cached_answer_expanded = await clients['cache'].check_cache(expanded_query) 
+    if expanded_query != query and cache_wrapper:
+        cached_answer_expanded = await cache_wrapper.check_cache(expanded_query)
         if cached_answer_expanded:
             logging.info(f"✅ CACHE HIT on EXPANDED query: {expanded_query}")
             await save_chat_entry(session_id, query, cached_answer_expanded, ["[Semantic Cache]"], [])
@@ -616,14 +659,17 @@ Answer the question directly and naturally. Use standard **Markdown tables** if 
         response = await clients['llm'].chat.completions.create( 
             model=LLM_MODEL_NAME, messages=[{"role": "user", "content": RAG_PROMPT}], temperature=0.1, 
         )
-        answer = response.choices[0].message.content.strip()   
+        answer = response.choices[0].message.content.strip() 
         answer = re.sub(r'\\n', '\n', answer); 
         answer = re.sub(r'^-+\|(-+\|)+-+\s*$', '', answer, flags=re.MULTILINE).strip()
 
 
         # --- HYBRID CACHE WRITE STRATEGY ---
-        cache_key = query if expanded_query == query else expanded_query
-        clients['cache'].save_cache(cache_key, answer) 
+        if cache_wrapper: # Use the local cache_wrapper variable
+            cache_key = query if expanded_query == query else expanded_query
+            cache_wrapper.save_cache(cache_key, answer)
+        else:
+            logging.info("Cache not available, skipping cache save operation")
         
         # Save to database (chat history)
         await save_chat_entry(session_id, query, answer, list(source_set), [c.text_snippet for c in context_chunks])
@@ -645,7 +691,8 @@ def parse_markdown_table(text: str) -> Optional[Tuple[str, List[str], List[List[
     # Check for the separator line (---)
     separator_line_index = -1
     for i, line in enumerate(lines):
-        if re.match(r'^\s*\|?[-:]+\s*\|?([-:\|\s]*)$', line.strip()):
+        # Relaxed regex to catch various separator styles (e.g., |---|--| or ---)
+        if re.match(r'^\s*\|?[-:|\s]+\s*\|?([-:\|\s]*)$', line.strip()):
             separator_line_index = i
             break
             
@@ -656,13 +703,11 @@ def parse_markdown_table(text: str) -> Optional[Tuple[str, List[str], List[List[
     
     # Function to clean and parse a table row
     def parse_row(row_text):
-        # Remove leading/trailing pipes and trim whitespace from cells
         cells = [cell.strip() for cell in row_text.strip().strip('|').split('|')]
-        # Filter out empty cells that might result from double piping or malformed rows
-        return [cell for cell in cells if cell]
+        return cells
 
     # Parse headers
-    headers = parse_row(header_line)
+    headers = [h for h in parse_row(header_line) if h] # Filter out empty headers
     if not headers:
         return None
 
@@ -673,11 +718,17 @@ def parse_markdown_table(text: str) -> Optional[Tuple[str, List[str], List[List[
     # Process lines after the separator
     for line in lines[separator_line_index + 1:]:
         parsed_row = parse_row(line)
-        # Check if the parsed row has the correct number of columns
+        
+        # Simple length check based on the number of headers
         if len(parsed_row) == len(headers):
             data_rows.append(parsed_row)
             current_table_lines.append(line)
+        elif len([cell for cell in parsed_row if cell]) == len(headers):
+             # Try to recover if there are extra empty strings
+             data_rows.append([cell for cell in parsed_row if cell])
+             current_table_lines.append(line)
         else:
+            # Stop when a row does not match the column count, assuming it's post-table text
             break
 
     if not data_rows:
@@ -813,6 +864,11 @@ with st.sidebar:
 for message in st.session_state.chat_history:
     with st.chat_message(message["role"]):
         if message["role"] == "assistant":
+            # Add a temporary check for debugging the raw LLM output
+            if st.session_state.get('show_debug') and message.get('raw_llm_output'):
+                 with st.expander("DEBUG: Raw LLM Output"):
+                    st.code(message['raw_llm_output'], language='markdown')
+            
             render_llm_response(message["content"])
         else:
             # Use standard markdown for the user's query
@@ -836,10 +892,19 @@ def handle_user_input(prompt):
                 generate_rag_response(rag_clients, prompt, st.session_state.session_id)
             )
             
-            st.session_state.chat_history.append({
-                "role": "assistant", "content": response_helper.answer,
-                "sources": response_helper.sources, "cache_status": response_helper.cache_status
-            })
+            # Prepare the assistant message dictionary
+            assistant_message = {
+                "role": "assistant", 
+                "content": response_helper.answer,
+                "sources": response_helper.sources, 
+                "cache_status": response_helper.cache_status,
+            }
+            
+            # Add raw output for debugging if enabled
+            if st.session_state.get('show_debug'):
+                 assistant_message['raw_llm_output'] = response_helper.answer
+            
+            st.session_state.chat_history.append(assistant_message)
             
         except Exception as e:
             error_message = f"An error occurred: {e}"
