@@ -12,14 +12,12 @@ import streamlit as st
 from pydantic import BaseModel, Field
 from db import create_db_and_tables, save_chat_entry, get_chat_history
 
-# Fallback import for ingestion
 try:
     from user_ingestion import full_pdf_ingestion_pipeline
 except ImportError:
     logging.warning("Could not import pipeline_service. PDF ingestion will be disabled.")
     full_pdf_ingestion_pipeline = None
 
-# Qdrant + Embedding + Reranker + LLM imports
 from qdrant_client import QdrantClient, models as qmodels
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.core import Settings
@@ -46,8 +44,7 @@ logging.basicConfig(level=logging.INFO)
 # ==================== CONFIGURATION ====================
 load_dotenv()
 
-QDRANT_COLLECTION_NAME = "ncert_multidoc_index9"
-# CONFIGURATION FOR SEMANTIC CACHE
+QDRANT_COLLECTION_NAME = "ncert_multidoc_index2"
 QDRANT_CACHE_COLLECTION = "llm_semantic_cache" 
 SEMANTIC_CACHE_THRESHOLD = 0.85
 
@@ -101,7 +98,20 @@ class SessionSummary(BaseModel):
     topics_covered: List[str]
     avg_answer_length: float
 
-# ==================== SEMANTIC CACHE WRAPPER (TTL REMOVED) ====================
+# ==================== NEW HELPER: LATEX CLEANER ====================
+def clean_latex_delimiters(text: str) -> str:
+    """
+    Safety Net: Converts academic LaTeX delimiters \[ \] and \( \) 
+    to Streamlit-friendly $$ $$ and $ $.
+    """
+    if not text: return ""
+    # Replace \[ ... \] with $$ ... $$ (Block math)
+    text = re.sub(r'\\\[(.*?)\\\]', r'$$\1$$', text, flags=re.DOTALL)
+    # Replace \( ... \) with $ ... $ (Inline math)
+    text = re.sub(r'\\\((.*?)\\\)', r'$\1$', text, flags=re.DOTALL)
+    return text
+
+# ==================== SEMANTIC CACHE WRAPPER ====================
 class SemanticCacheWrapper:
     """A robust wrapper that handles semantic cache lookup and persistence using Qdrant."""
     def __init__(self, q_client, embed_model, collection_name, threshold):
@@ -160,7 +170,6 @@ class SemanticCacheWrapper:
 
 
     def save_cache(self, query: str, answer: str):
-        # FIX: Ensure we check both dependencies before starting the task
         if not self.q_client or not self.embed_model: 
             logging.info("Skipping cache save: Qdrant or embedding model not available in SemanticCacheWrapper.")
             return 
@@ -188,8 +197,6 @@ class SemanticCacheWrapper:
         except Exception as e:
             logging.warning(f"Semantic Cache WRITE Error: {e}")
             pass
-# ==================== END SEMANTIC CACHE WRAPPER ====================
-
 
 # ==================== UTILITY FUNCTIONS ====================
 def min_max_normalize(scores: List[float]) -> List[float]:
@@ -203,34 +210,25 @@ def min_max_normalize(scores: List[float]) -> List[float]:
 
 
 async def expand_query_with_context(query: str, history_records: List[Dict[str, Any]]) -> str:
-    """
-    Expands ambiguous follow-up queries using previous conversation context.
-    
-    MODIFIED: Uses safer regex patterns.
-    """
+    """Expands ambiguous follow-up queries using previous conversation context."""
     follow_up_patterns = [
-        r'\b(that|this|it|those|these)\b', # Direct Pronouns/Referential
-        r'\b(tell me more|more details|simplify|expand)\b', # Strong Conversational Cues
-        r'\b(what about|regarding|concerning)\b(?!\s+)', # Conversational Framing
-        r'^(how|why|can you)\b.*\b(that|it)\b', # Conditional/Referential Questions
-        r'^(yes|okay|alright)' # Affirmative Follow-ups
+        r'\b(that|this|it|those|these)\b', 
+        r'\b(tell me more|more details|simplify|expand)\b', 
+        r'\b(what about|regarding|concerning)\b(?!\s+)', 
+        r'^(how|why|can you)\b.*\b(that|it)\b', 
+        r'^(yes|okay|alright)' 
     ]
     
     query_lower = query.lower()
     is_likely_followup = any(re.search(pattern, query_lower) for pattern in follow_up_patterns)
     
-    # Check if expansion is necessary
     if is_likely_followup and history_records:
         try:
-            # Get the previous user query's topic (first 80 characters)
             last_user_query = history_records[-1].get('user_query', 'previous discussion')
             context_topic = last_user_query[:80]
-            
-            # Construct the expanded query
             expanded_query = f"{query} [Previous context: {context_topic}...]"
             logging.info(f"[QUERY EXPANSION] Expanded: '{expanded_query}'")
             return expanded_query
-        
         except Exception as e:
             logging.warning(f"[QUERY EXPANSION] Error during expansion, returning raw query: {e}")
             return query
@@ -249,7 +247,7 @@ def format_chat_history(history_records: List[Dict[str, Any]]) -> str:
         marker = "📍 [MOST RECENT]" if is_recent else f"[{i - total_turns}]" 
         response = record.get('llm_response', '')
         if len(response) > 400: response = response[:400] + "..."
-        turn = (f"Turn {i} {marker}\n" f"  👤 User: {record.get('user_query', '')}\n" f"  🤖 Assistant: {response}")
+        turn = (f"Turn {i} {marker}\n" f"  👤 User: {record.get('user_query', '')}\n" f"  🤖 Assistant: {response}")
         formatted_history.append(turn)
     return "\n\n".join(formatted_history)
 
@@ -274,11 +272,7 @@ async def get_session_summary(session_id: str) -> SessionSummary:
     )
 
 async def log_cache_eviction_status(clients: Dict[str, Any]):
-    """
-    Conceptual function to check cache size and alert if eviction is missed.
-    This runs every RAG query.
-    """
-    # Use clients.get('cache') directly as the wrapper is None if not initialized
+    """Conceptual function to check cache size and alert if eviction is missed."""
     if clients.get('qdrant') and clients.get('cache'): 
         try:
             count_result = clients['qdrant'].count(collection_name=QDRANT_CACHE_COLLECTION, exact=True)
@@ -293,8 +287,6 @@ async def log_cache_eviction_status(clients: Dict[str, Any]):
             logging.error(f"Failed to check cache eviction status: {e}")
     elif not clients.get('cache'):
         logging.debug("Cache not available, skipping cache eviction status check")
-
-# ==================== END UTILITY FUNCTIONS ====================
 
 
 # ==================== INITIALIZATION & BM25 BUILD ====================
@@ -331,9 +323,7 @@ def build_bm25_index(q_client: QdrantClient):
 
 
 async def initialize_clients():
-    """
-    Initializes clients and assigns them to module-level globals.
-    """
+    """Initializes clients and assigns them to module-level globals."""
     global qdrant_client, embed_model, reranker, llm_client, semantic_cache
     
     print("\n--- Initializing RAG Services ---")
@@ -349,14 +339,12 @@ async def initialize_clients():
         
     # 2. Qdrant client
     try:
-        qdrant_url = os.getenv("QDRANT_URL")
-        qdrant_api_key = os.getenv("QDRANT_API_KEY")
+        qdrant_url = os.getenv("QDRANT_CLOUD_URL")
+        qdrant_api_key = os.getenv("QDRANT_CLOUD_API_KEY")
         
         if qdrant_url:
-            # If QDRANT_URL is provided, use it directly
             qdrant_client = QdrantClient(url=qdrant_url, api_key=qdrant_api_key)
         else:
-            # Fallback to separate host and port
             qdrant_client = QdrantClient(
                 url=os.getenv("QDRANT_HOST"),
                 api_key=qdrant_api_key,
@@ -379,7 +367,7 @@ async def initialize_clients():
                 )
                 print(f"✅ Qdrant Cache Collection created: {cache_collection_name}")
                 
-                # Create the payload indices for LFU/LRU tracking (TTL index removed)
+                # Create the payload indices for LFU/LRU tracking
                 qdrant_client.create_payload_index(collection_name=cache_collection_name, field_name="frequency", field_schema="integer")
                 qdrant_client.create_payload_index(collection_name=cache_collection_name, field_name="last_used_timestamp", field_schema="float")
                 print("✅ Created indices for LFU and LRU tracking.")
@@ -396,9 +384,6 @@ async def initialize_clients():
     if LLM_API_KEY:
         try:
             llm_client = AsyncOpenAI(base_url=OPENROUTER_BASE_URL, api_key=LLM_API_KEY)
-            # IMPORTANT: Revert Referer to 8000 (old setting) if 8501 causes issues, 
-            # or keep 8501 if it matches your deployment environment. 
-            # Sticking to the environment variable fallback here.
             llm_client.extra_headers = {"HTTP-Referer": os.getenv("YOUR_SITE_URL", "http://localhost:8501"), "X-Title": "Hybrid Qdrant RAG"}
             print(f"✅ LLM client initialized: {LLM_MODEL_NAME}")
         except Exception as e:
@@ -418,10 +403,6 @@ async def initialize_clients():
             semantic_cache = None
     else:
         print("❌ Semantic Cache disabled due to missing Qdrant/Embedding client.")
-        if not qdrant_client:
-            print("   - Qdrant client is not initialized")
-        if not embed_model:
-            print("   - Embedding model is not initialized")
         semantic_cache = None
 
     # 5. Reranker
@@ -439,56 +420,38 @@ async def initialize_clients():
     
 @st.cache_resource
 def setup_rag_services():
-    """
-    Initializes all RAG components. Clears cache to rebuild BM25 index if ingestion_done flag is set.
-    """
-    # 1. Reruns based on ingestion_done flag
+    """Initializes all RAG components."""
     if st.session_state.get('ingestion_done', False):
         print("\n--- CACHE CLEAR TRIGGERED ---")
         setup_rag_services.clear() 
-        st.session_state.ingestion_done = False # Reset the flag
+        st.session_state.ingestion_done = False 
     
     async def run_initialization():
-        # Await DB setup and client initialization
         await create_db_and_tables() 
         return await initialize_clients()
         
     print("Starting synchronous RAG service setup...")
     try:
-        # --- START: WINDOWS EVENT LOOP FIX APPLIED HERE ---
         if sys.platform == "win32":
             loop = asyncio.SelectorEventLoop()
             asyncio.set_event_loop(loop)
         else:
             loop = asyncio.get_event_loop()
-        # --- END: WINDOWS EVENT LOOP FIX APPLIED HERE ---
-        
     except RuntimeError:
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         
     clients = loop.run_until_complete(run_initialization())
     
-    # 2. Build BM25 Index using the initialized Qdrant client
     if clients.get('qdrant'):
         build_bm25_index(clients['qdrant']) 
     
     print("RAG service setup complete.")
     
-    # Print final status of all clients
-    print("\n--- Final Service Status ---")
-    print(f"Qdrant Client: {'✅' if clients.get('qdrant') else '❌'}")
-    print(f"Embedding Model: {'✅' if clients.get('embed') else '❌'}")
-    print(f"Reranker: {'✅' if clients.get('reranker') else '❌'}")
-    print(f"LLM Client: {'✅' if clients.get('llm') else '❌'}")
-    print(f"Semantic Cache: {'✅' if clients.get('cache') else '❌'}")
-    print(f"BM25 Index: {'✅' if clients.get('bm25_index') else '❌'}")
-    print("---------------------------\n")
-    
     return clients
 
 
-# ==================== CORE RETRIEVAL LOGIC (MODIFIED TO ACCEPT CLIENTS) ====================
+# ==================== CORE RETRIEVAL LOGIC ====================
 async def search_index_core(q_client: QdrantClient, emb_model, query: str, limit: int) -> List[SearchResultHelper]:
     if not q_client or not emb_model: raise Exception("Service not ready. Qdrant or embedding model not initialized.")
     try:
@@ -527,7 +490,6 @@ async def hybrid_retrieve_and_rerank_chunks(clients: Dict[str, Any], query: str,
     bm25_search_core(clients['bm25_index'], clients['bm25_metadata'], clients['bm25_corpus'], query, initial_k)
     )
 
-    # 2. Prepare for Combination
     combined: Dict[str, SearchResultHelper] = {}; vector_scores = [r.score for r in vector_results]; bm25_scores = [r.score for r in bm25_results]
     normalized_vector_scores = min_max_normalize(vector_scores); normalized_bm25_scores = min_max_normalize(bm25_scores)
     for i, res in enumerate(vector_results):
@@ -538,7 +500,6 @@ async def hybrid_retrieve_and_rerank_chunks(clients: Dict[str, Any], query: str,
         else: bm.score = normalized_bm25_score * HYBRID_KEYWORD_WEIGHT; combined[key] = bm
     merged_results = sorted(combined.values(), key=lambda r: r.score, reverse=True)
 
-    # 3. Rerank using explicit clients
     source_set: Set[str] = set()
     results_to_process = merged_results[:INITIAL_RETRIEVAL_K] 
     if clients['reranker']:
@@ -559,10 +520,9 @@ async def hybrid_retrieve_and_rerank_chunks(clients: Dict[str, Any], query: str,
         return merged_results[:FINAL_RERANK_N], source_set
 
 
-# ==================== CORE RAG GENERATION (MODIFIED FOR HYBRID CACHING) ====================
+# ==================== CORE RAG GENERATION ====================
 async def generate_rag_response(clients: Dict[str, Any], query: str, session_id: str, use_retrieval_k: int = INITIAL_RETRIEVAL_K) -> RAGResponseHelper:
     
-    # 1. Check if all required clients were passed and exist
     if clients.get('llm') is None:
         raise Exception("Service not fully initialized. LLM client is not available.")
     
@@ -570,37 +530,35 @@ async def generate_rag_response(clients: Dict[str, Any], query: str, session_id:
     if cache_wrapper is None:
         logging.warning("Semantic Cache is disabled. The application will continue without caching.")
 
-    # 1.5 LOG EVICTION STATUS (Conceptual check)
     await log_cache_eviction_status(clients)
 
-    # 2. PRIMARY CACHE CHECK: Check the cache using the RAW, unexpanded query (for semantic similarity/repetition)
+    # PRIMARY CACHE CHECK
     cached_answer_raw = None
     if cache_wrapper:
         cached_answer_raw = await cache_wrapper.check_cache(query)
         if cached_answer_raw:
             logging.info(f"✅ CACHE HIT on RAW query: {query}")
+            # Apply LaTeX Clean to cached answer just in case old cache has bad delimiters
+            cached_answer_raw = clean_latex_delimiters(cached_answer_raw)
             await save_chat_entry(session_id, query, cached_answer_raw, ["[Semantic Cache]"], [])
             return RAGResponseHelper(query=query, answer=cached_answer_raw, sources=["[Semantic Cache]"], session_id=session_id, cache_status="HIT")
     
-    # 3. EXPAND QUERY
+    # EXPAND QUERY
     history_records = await get_chat_history(session_id, CHAT_HISTORY_LIMIT)
     expanded_query = await expand_query_with_context(query, history_records)
     
-    # 4. SECONDARY CACHE CHECK (Only needed if expansion occurred)
+    # SECONDARY CACHE CHECK
     if expanded_query != query and cache_wrapper:
         cached_answer_expanded = await cache_wrapper.check_cache(expanded_query)
         if cached_answer_expanded:
             logging.info(f"✅ CACHE HIT on EXPANDED query: {expanded_query}")
+            cached_answer_expanded = clean_latex_delimiters(cached_answer_expanded)
             await save_chat_entry(session_id, query, cached_answer_expanded, ["[Semantic Cache]"], [])
             return RAGResponseHelper(query=query, answer=cached_answer_expanded, sources=["[Semantic Cache]"], session_id=session_id, cache_status="HIT")
-
-
-    # --- RAG Execution continues if both cache checks fail ---
 
     history_str = format_chat_history(history_records)
 
     try:
-        # Use the expanded_query for retrieval (critical for contextual searches)
         context_chunks, source_set = await hybrid_retrieve_and_rerank_chunks(clients, expanded_query, initial_k=use_retrieval_k)
     except Exception as e:
         print(f"⚠️ Retrieval failed: {e}")
@@ -611,7 +569,6 @@ async def generate_rag_response(clients: Dict[str, Any], query: str, session_id:
     if not context_str and not history_records:
         return RAGResponseHelper(query=query, answer="No relevant information found. Please try a different query.", sources=[], session_id=session_id, cache_status="MISS")
     
-    # *** RAG PROMPT MODIFICATION: ALLOWING TABLES ***
     RAG_PROMPT = f"""
 You are an expert Q&A assistant for Indian educational content(NCERT based).
 
@@ -625,23 +582,12 @@ If this appears to be a follow-up to the previous conversation:
 **YOUR INSTRUCTIONS:**
 1. Read the CONVERSATION HISTORY first to understand context
 2. Read the CURRENT CONTEXT for detailed information
-3. **Prioritize the most relevant information and rephrase it in your own words. Do NOT directly copy text chunks that contain formatting markers (like ###, ##, or multiple dashes) from the context.**
+3. **Prioritize the most relevant information and rephrase it in your own words.**
 4. If asked to elaborate/explain more: add depth and examples
 5. If asked for clarification: rephrase in a different way
 6. Be friendly, concise, and educational
-7. Use examples when helpful
-8. Keep technical jargon minimal
-9. Crucially, if the CURRENT CONTEXT contains the description of a chemical reaction (e.g., reactants and products in words) but the symbolic equation is missing or only partially extracted, you MUST use your internal chemistry knowledge of the subject matter to reconstruct and generate the correct, balanced symbolic equation as part of your answer, if relevant to the user's question.
-10. **FORMATTING RULE: Wrap all mathematical and chemical equations in double dollar signs ($$). For example, output $$2H_2 + O_2 \rightarrow 2H_2O$$ for chemical equations and $$E=mc^2$$ for physics. This ensures proper display.**
-
-**ABSOLUTELY DO NOT:**
-- Mention the CONTEXT source or format (This prevents "NCERT style," "in NCERT textbooks," etc., from appearing in the output.)
-- Reveal the CONVERSATION HISTORY structure
-- Make up information not in context or history
-- Provide incomplete or vague answers
-- Repeat previous answers without adding value
-- **Use Markdown headings (e.g., #, ##, ###) for structuring the answer. Instead, use bolding, lists, and horizontal rules for separation.**
-- Summarize the answers at last of response unless user asks for it.
+7. **FORMATTING RULE: Wrap all mathematical and chemical equations in double dollar signs ($$). For example, output $$2H_2 + O_2 \rightarrow 2H_2O$$ for chemical equations and $$E=mc^2$$ for physics. This ensures proper display.**
+8. Use standard Markdown tables if necessary to present clear comparative data.
 
 --- CONVERSATION HISTORY ---
 {history_str}
@@ -653,25 +599,26 @@ If this appears to be a follow-up to the previous conversation:
 {query}
 
 --- YOUR RESPONSE ---
-Answer the question directly and naturally. Use standard **Markdown tables** if only necessary to present clear comparative data (like element counts), as the display system is configured to render them.
+Answer the question directly and naturally.
 """
     try:
         response = await clients['llm'].chat.completions.create( 
             model=LLM_MODEL_NAME, messages=[{"role": "user", "content": RAG_PROMPT}], temperature=0.1, 
         )
         answer = response.choices[0].message.content.strip() 
-        answer = re.sub(r'\\n', '\n', answer); 
+        
+        # --- CLEANUP PIPELINE ---
+        answer = re.sub(r'\\n', '\n', answer)
         answer = re.sub(r'^-+\|(-+\|)+-+\s*$', '', answer, flags=re.MULTILINE).strip()
 
+        answer = clean_latex_delimiters(answer)
 
-        # --- HYBRID CACHE WRITE STRATEGY ---
-        if cache_wrapper: # Use the local cache_wrapper variable
+        if cache_wrapper: 
             cache_key = query if expanded_query == query else expanded_query
             cache_wrapper.save_cache(cache_key, answer)
         else:
             logging.info("Cache not available, skipping cache save operation")
         
-        # Save to database (chat history)
         await save_chat_entry(session_id, query, answer, list(source_set), [c.text_snippet for c in context_chunks])
 
         return RAGResponseHelper(query=query, answer=answer, sources=list(source_set), session_id=session_id, cache_status="MISS")
@@ -680,143 +627,100 @@ Answer the question directly and naturally. Use standard **Markdown tables** if 
         raise Exception(f"LLM generation failed: {e}")
 
 
-# ==================== NEW RENDERING UTILITY (Table Detection and st.table rendering) ====================
+# ==================== RENDERING UTILITY (LATEX + TABLE) ====================
 def parse_markdown_table(text: str) -> Optional[Tuple[str, List[str], List[List[str]]]]:
     """
     Detects and parses the first standard Markdown table in a block of text.
-    Returns (full_table_text, headers, rows) or None if no table is found.
     """
     lines = text.strip().split('\n')
-    
-    # Check for the separator line (---)
     separator_line_index = -1
     for i, line in enumerate(lines):
-        # Relaxed regex to catch various separator styles (e.g., |---|--| or ---)
         if re.match(r'^\s*\|?[-:|\s]+\s*\|?([-:\|\s]*)$', line.strip()):
             separator_line_index = i
             break
             
-    if separator_line_index < 1:
-        return None
+    if separator_line_index < 1: return None
         
     header_line = lines[separator_line_index - 1].strip()
     
-    # Function to clean and parse a table row
     def parse_row(row_text):
         cells = [cell.strip() for cell in row_text.strip().strip('|').split('|')]
         return cells
 
-    # Parse headers
-    headers = [h for h in parse_row(header_line) if h] # Filter out empty headers
-    if not headers:
-        return None
+    headers = [h for h in parse_row(header_line) if h] 
+    if not headers: return None
 
-    # Find the extent of the table data
     data_rows = []
     current_table_lines = [header_line, lines[separator_line_index]]
     
-    # Process lines after the separator
     for line in lines[separator_line_index + 1:]:
         parsed_row = parse_row(line)
-        
-        # Simple length check based on the number of headers
         if len(parsed_row) == len(headers):
             data_rows.append(parsed_row)
             current_table_lines.append(line)
         elif len([cell for cell in parsed_row if cell]) == len(headers):
-             # Try to recover if there are extra empty strings
              data_rows.append([cell for cell in parsed_row if cell])
              current_table_lines.append(line)
         else:
-            # Stop when a row does not match the column count, assuming it's post-table text
             break
 
-    if not data_rows:
-        return None
-        
+    if not data_rows: return None
     full_table_text = '\n'.join(current_table_lines)
     return full_table_text, headers, data_rows
 
 
 def render_llm_response(raw_text: str):
     """
-    Renders the LLM response, prioritizing table detection, then LaTeX, then markdown.
-    
-    Uses st.table for rendering detected tables (list of lists).
+    Renders the LLM response. 
+    Includes Safe-Guard to fix LaTeX delimiters before checking for tables.
     """
     
-    # 1. TABLE DETECTION
+    # 1. CLEAN LATEX FIRST
+    raw_text = clean_latex_delimiters(raw_text)
+    
+    # 2. TABLE DETECTION
     table_result = parse_markdown_table(raw_text)
     
     if table_result:
         full_table_text, headers, data_rows = table_result
-        
-        # Split text around the first occurrence of the table
         parts = re.split(re.escape(full_table_text), raw_text, 1)
         pre_table_text = parts[0] if len(parts) > 0 else ""
         post_table_text = parts[1] if len(parts) > 1 else ""
 
-        # Render pre-table text recursively
         if pre_table_text.strip():
             render_llm_response(pre_table_text.strip())
             
-        # Render the table as a Streamlit Table
         if data_rows:
-            # Prepare data for st.table (list of lists, including header)
             table_data = [headers] + data_rows
-            
             try:
-                # Use st.table as requested
                 st.table(table_data) 
             except Exception as e:
-                # Fallback to markdown if st.table fails
-                st.markdown(full_table_text, unsafe_allow_html=False)
+                st.markdown(full_table_text, unsafe_allow_html=True)
                 logging.warning(f"Failed to render table using st.table: {e}. Falling back to markdown.")
 
-        # Render post-table text recursively
         if post_table_text.strip():
             render_llm_response(post_table_text.strip())
-            
         return
 
-    # Pattern to find content wrapped in $$ 
-    parts = re.split(r'(\$\$.*?\$\$)', raw_text, flags=re.DOTALL)
-    
-    for part in parts:
-        if part.startswith('$$') and part.endswith('$$'):
-            # This is a LaTeX string. Remove the $$ delimiters.
-            latex_content = part.strip('$').strip()
-            
-            # Use st.latex for display mode equations
-            st.latex(latex_content)
-        elif part:
-            st.markdown(part, unsafe_allow_html=False)
-
-# ==================== END NEW RENDERING UTILITY ====================
+    st.markdown(raw_text, unsafe_allow_html=True)
 
 
 # ==================== STREAMLIT UI IMPLEMENTATION ====================
 
-# Initialize Session State (Must be done first to support caching logic)
 if "session_id" not in st.session_state: st.session_state["session_id"] = str(uuid.uuid4())
 if "chat_history" not in st.session_state: st.session_state["chat_history"] = []
 if "show_debug" not in st.session_state: st.session_state["show_debug"] = False
 if "ingestion_done" not in st.session_state: st.session_state["ingestion_done"] = False
 
-# Initialize RAG Services and get components
 rag_clients = setup_rag_services()
 bm25_corpus = rag_clients['bm25_corpus'] 
 
-# --- UI Layout ---
 st.set_page_config(page_title="Hybrid RAG Chatbot", layout="wide")
-
 st.title("📚 Hybrid RAG Chatbot")
 st.caption(f"Session ID: {st.session_state.session_id}")
 
-# Sidebar for controls
 with st.sidebar:
     st.header("System Status")
-    
     status_emoji = "🟢" if all(rag_clients.values()) else "🔴"
     st.markdown(f"**RAG Services:** {status_emoji}")
     st.markdown(f"**Qdrant:** {'✅' if rag_clients['qdrant'] else '❌'}")
@@ -828,31 +732,22 @@ with st.sidebar:
         st.session_state.chat_history = []
         st.rerun()
         
-    # --- PDF Upload Section ---
     st.header("⬆️ Ingest PDF")
-    uploaded_file = st.file_uploader(
-        "Upload PDF for indexing", type="pdf", key="pdf_uploader"
-    )
+    uploaded_file = st.file_uploader("Upload PDF for indexing", type="pdf", key="pdf_uploader")
     
     if uploaded_file and full_pdf_ingestion_pipeline:
         if st.button("Start Ingestion", key="ingest_button"):
-            
             file_content = uploaded_file.read()
             filename = uploaded_file.name
-            
             with st.spinner(f"Processing and ingesting '{filename}'..."):
                 try:
                     pipeline_result = asyncio.run(
                         full_pdf_ingestion_pipeline(file_content, filename)
                     )
-                    
                     st.success(f"✅ Ingestion Complete! Chunks: {pipeline_result.get('ingested_chunks', 0)}")
-                    
-                    # --- CRITICAL RERUN LOGIC ---
-                    st.session_state.ingestion_done = True # Set the flag
+                    st.session_state.ingestion_done = True 
                     st.info("Re-running app to rebuild BM25 index...")
-                    st.rerun() # Force restart
-                    
+                    st.rerun() 
                 except Exception as e:
                     st.error(f"Ingestion failed: {e}")
                     logging.error(f"PDF pipeline failed for {filename}: {e}")
@@ -860,18 +755,14 @@ with st.sidebar:
         st.warning("Ingestion pipeline is disabled. Check `pipeline_service.py` import.")
 
 
-# Main Chat Area
 for message in st.session_state.chat_history:
     with st.chat_message(message["role"]):
         if message["role"] == "assistant":
-            # Add a temporary check for debugging the raw LLM output
             if st.session_state.get('show_debug') and message.get('raw_llm_output'):
                  with st.expander("DEBUG: Raw LLM Output"):
                     st.code(message['raw_llm_output'], language='markdown')
-            
             render_llm_response(message["content"])
         else:
-            # Use standard markdown for the user's query
             st.markdown(message["content"])
             
         if message.get("sources"):
@@ -881,9 +772,7 @@ for message in st.session_state.chat_history:
                 st.code('\n'.join(message["sources"]))
 
 def handle_user_input(prompt):
-    """Processes the user query and updates chat history."""
     if not prompt: return
-
     st.session_state.chat_history.append({"role": "user", "content": prompt})
     
     with st.spinner("Thinking... Retrieving context and generating response..."):
@@ -892,7 +781,6 @@ def handle_user_input(prompt):
                 generate_rag_response(rag_clients, prompt, st.session_state.session_id)
             )
             
-            # Prepare the assistant message dictionary
             assistant_message = {
                 "role": "assistant", 
                 "content": response_helper.answer,
@@ -900,7 +788,6 @@ def handle_user_input(prompt):
                 "cache_status": response_helper.cache_status,
             }
             
-            # Add raw output for debugging if enabled
             if st.session_state.get('show_debug'):
                  assistant_message['raw_llm_output'] = response_helper.answer
             
@@ -914,20 +801,17 @@ def handle_user_input(prompt):
     
     st.rerun() 
 
-# The main chat input area
 prompt = st.chat_input("Ask a question about the NCERT documents...")
 if prompt:
     handle_user_input(prompt)
 
 
-# --- Debugging and Retrieval Panel ---
 st.divider()
 st.toggle("Show Debug & Retrieval Panel", value=st.session_state.show_debug, key="show_debug") 
 
 if st.session_state.show_debug:
     st.header("🛠️ Debug and Retrieval Tools")
     
-    # 1. Retrieval Tester 
     st.subheader("1. Context Retrieval Test")
     retrieval_query = st.text_input("Enter query to test retrieval:", key="retrieval_query")
     k_retrieve = st.slider("Initial K (Vector/BM25):", 1, 30, INITIAL_RETRIEVAL_K)
@@ -941,22 +825,16 @@ if st.session_state.show_debug:
                     chunks, _ = asyncio.run(
                         hybrid_retrieve_and_rerank_chunks(rag_clients, retrieval_query, initial_k=k_retrieve)
                     )
-                    
                     st.success(f"Retrieved and Reranked {len(chunks)} Chunks")
-                    
                     chunk_data = [{
                         "Score": f"{c.score:.4f}", "Source": c.source_file, "Chunk ID": c.chunk_id, 
                         "Snippet": c.text_snippet[:150] + "...", "Full Content": c.text_snippet,
                     } for c in chunks]
-                    
-                    #keep st.dataframe here for the debug panel as it is a standard and robust view for tabular data
                     st.dataframe(chunk_data, use_container_width=True) 
                     st.caption("Expand 'Full Content' in the table to see entire chunk text.")
-                    
                 except Exception as e:
                     st.error(f"Retrieval Test Failed: {e}")
 
-    # 2. Session Summary 
     st.subheader("2. Conversation History Summary")
     if st.session_state.session_id:
         try:

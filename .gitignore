@@ -4,3 +4,8 @@ __pycache__/
 *.pyc
 .ipynb_checkpoints
 hf_cache/
+NCERT_SCIENCE/
+qdrant_backup.json
+qdrant_migration.py
+docling_process.py
+unzip_file.py

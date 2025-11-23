@@ -48,13 +48,13 @@ AWS_REGION = os.getenv("AWS_REGION")
 S3_BUCKET_NAME = os.getenv("S3_BUCKET_NAME") 
 
 # PIPELINE CONFIGURATION
-INPUT_LOCAL_DIR = "Social Science"
-INPUT_S3_PREFIX = "input_pdfs7"
-OUTPUT_S3_PREFIX = "output_extractions7"
+INPUT_LOCAL_DIR = "NCERT_SCIENCE"
+INPUT_S3_PREFIX = "inputs_NCERT_SCIENCE"
+OUTPUT_S3_PREFIX = "outputs_NCERT_SCIENCE"
 LOCAL_CACHE_DIR = Path(".s3_cache")
 
 # FILTER CONSTANT
-IMAGE_SIZE_THRESHOLD_KB = 40 
+IMAGE_SIZE_THRESHOLD_KB = 20
 
 # Ensure consistent language detection
 DetectorFactory.seed = 0
@@ -144,6 +144,19 @@ def list_pdfs_in_s3(bucket_name: str, prefix: str) -> List[str]:
         raise
     
     return pdfs
+
+def check_s3_output_exists(bucket_name: str, s3_prefix: str) -> bool:
+    """Checks if any objects exist under the given prefix (to determine if a PDF was already processed)."""
+    try:
+        response = s3_client.list_objects_v2(
+            Bucket=bucket_name,
+            Prefix=s3_prefix,
+            MaxKeys=1
+        )
+        return response.get('KeyCount', 0) > 0
+    except ClientError as e:
+        logging.warning(f"S3 check failed for prefix {s3_prefix}: {e}")
+        return False
 
 
 # FORMULA ENRICHMENT MODELS
@@ -312,10 +325,29 @@ def detect_language_from_pdf(pdf_path: Path, sample_size: int = 200) -> str:
         return "unknown"
 
 
-def create_pdf_id(pdf_s3_key: str) -> str:
-    pdf_id = Path(pdf_s3_key).stem
-    pdf_id = re.sub(r'[^\w\-]', '_', pdf_id)
-    return pdf_id
+def create_pdf_id(pdf_s3_key: str, input_s3_prefix: str) -> str:
+    """
+    Creates a unique, S3-safe document ID based on the full path 
+    relative to the input prefix, incorporating the class/subject structure.
+    
+    Example Input: 'inputs_NCERT_SCIENCE/Class 10/Science/Chapter 1.pdf'
+    Example Output: 'Class_10/Science/Chapter_1'
+    """
+    relative_path = pdf_s3_key.replace(input_s3_prefix, '', 1).strip('/')
+
+    path_obj = Path(relative_path)
+    pdf_stem_clean = re.sub(r'[^a-zA-Z0-9_\-]', '_', path_obj.stem).strip('_')
+    folder_parts = path_obj.parent.parts
+    if folder_parts and path_obj.parent != Path('.'):
+        cleaned_folder_structure = '/'.join(
+            re.sub(r'[^a-zA-Z0-9_\-]', '_', part).strip('_')
+            for part in folder_parts
+        )
+        final_pdf_id = f"{cleaned_folder_structure}/{pdf_stem_clean}"
+    else:
+        final_pdf_id = pdf_stem_clean
+        
+    return final_pdf_id.strip('/').replace('//', '/')
 
 
 def add_page_headers_to_markdown(md_path: Path):
@@ -360,7 +392,6 @@ def parse_markdown_to_text_elements(
             sections = split_text_into_sections(page_content)
             
             for section_order, section_text in enumerate(sections, 1):
-                # IMPORTANT: Skip text elements that were consumed as captions
                 if re.match(r'^\[CAPTION\]: ', section_text.strip(), re.IGNORECASE):
                     continue
                 if len(section_text.strip()) < 20: continue
@@ -418,20 +449,16 @@ def rewrite_markdown_image_links_to_s3(
         
         def replace_link(match):
             nonlocal current_image_index
-            
-            # Increment counter for every image link found in the document order
+
             current_image_index += 1
-            
-            # The key in the final_image_map is the sequential index (1-based)
+
             sequential_key = str(current_image_index) 
 
             if sequential_key in final_image_map:
-                # Image was saved (passed filter)
                 final_filename = final_image_map[sequential_key]
                 full_s3_key = f"s3://{bucket_name}/{s3_base_key}{final_filename}"
                 return f"![Image]({full_s3_key})"
             else:
-                # Image was eliminated (below 40 KB) - remove the link from markdown
                 return ""
 
         final_content = re.sub(image_tag_pattern, replace_link, content)
@@ -446,34 +473,36 @@ def consolidate_local_outputs_for_s3(
     doc_id: str, 
     bucket_name: str, 
     output_s3_prefix: str,
-    saved_image_map: Dict[int, Path] # {sequential_index: local_path_to_saved_image}
+    saved_image_map: Dict[int, Path]
 ) -> Tuple[Path, Dict[str, str]]:
     """
     Consolidates necessary files, renames saved images to sequential format, 
     and returns the final file map for Markdown link correction.
     """
-    clean_odir_local = odir_local.parent / f"{doc_id}_clean_for_upload"
+    local_doc_id_base = Path(doc_id).name
+    clean_odir_local = odir_local.parent / f"{local_doc_id_base}_clean_for_upload"
     clean_odir_local.mkdir(parents=True, exist_ok=True)
     clean_img_dir = clean_odir_local / "images"
     clean_img_dir.mkdir(exist_ok=True) 
     
-    final_image_map = {} # {sequential_index_str: final_filename}
+    final_image_map = {}
     
     # 1. Rename and Move ALL SAVED image files to the sequential name
     for sequential_index, local_path in saved_image_map.items():
-        new_name = f"{doc_id}_img_{sequential_index}.png"
+        new_name = f"{local_doc_id_base}_img_{sequential_index}.png"
         shutil.move(local_path, clean_img_dir / new_name)
         final_image_map[str(sequential_index)] = new_name
     
     # 2. Markdown file: Rewrite links using the final_image_map
-    md_path = odir_local / f"{doc_id}.md"
+    md_filename = Path(doc_id).name + ".md"
+    md_path = odir_local / md_filename
+    
     if md_path.exists():
         rewrite_markdown_image_links_to_s3(
             md_path, doc_id, bucket_name, output_s3_prefix, final_image_map
         ) 
-        shutil.move(md_path, clean_odir_local / md_path.name)
+        shutil.move(md_path, clean_odir_local / md_filename)
         
-    # 3. Move CSV files
     for f in odir_local.glob('*.csv'):
         shutil.move(f, clean_odir_local / f.name)
         
@@ -505,7 +534,6 @@ def extract_caption_from_neighbors(
         next_item, _ = items[item_index + 1]
         if isinstance(next_item, TextItem):
             text = next_item.text.strip()
-            # Look for explicit figure/table labels or short, concentrated text
             if re.match(r'^(fig|table|chart)\.\s*\d+(\.\d+)?', text, re.IGNORECASE) or (len(text.split()) < 30 and len(text) < 150):
                 caption_text = text
                 items_to_skip = 1
@@ -516,10 +544,8 @@ def extract_caption_from_neighbors(
         prev_item, _ = items[item_index - 1]
         if isinstance(prev_item, TextItem):
             text = prev_item.text.strip()
-            # Only consider it a caption if it's very short and looks like one
             if re.match(r'^(fig|table|chart)\.\s*\d+(\.\d+)?', text, re.IGNORECASE) or (len(text.split()) < 30 and len(text) < 150):
                 caption_text = text
-                # We do NOT skip the preceding item here
                 return caption_text, 0
             
     return None, 0
@@ -533,11 +559,12 @@ def process_single_pdf(
     output_local_root: Path,
     bucket_name: str, 
     output_s3_prefix: str,
+    input_s3_prefix: str,
     ocr_path: Optional[str] = None,
     enable_formula_understanding: bool = True
 ) -> Tuple[List[ElementMetadata], Path]:
     
-    pdf_id = create_pdf_id(pdf_s3_key)
+    pdf_id = create_pdf_id(pdf_s3_key, input_s3_prefix)
     print(f"\n📄 Processing: {pdf_local_path.name} (ID: {pdf_id})")
     print(f"🖼️ Image Filter: KEEP > {IMAGE_SIZE_THRESHOLD_KB} KB")
     
@@ -581,8 +608,8 @@ def process_single_pdf(
         raise
     
     # Extraction, Filtering, and Caption Grouping
-    md_local_path = odir_local / f"{pdf_id}.md" 
-    md_s3_key = f"{output_s3_prefix}/{pdf_id}/{pdf_id}.md" 
+    md_local_path = odir_local / (Path(pdf_id).name + ".md")
+    md_s3_key = f"{output_s3_prefix}/{pdf_id}/{Path(pdf_id).name}.md" 
     
     elements_metadata: List[ElementMetadata] = []
     timestamp = datetime.utcnow().isoformat() + "Z"
@@ -590,24 +617,14 @@ def process_single_pdf(
     table_counter = 0
     image_counter_sequential = 0 
     
-    # {sequential_index: local_path_to_saved_image}
-    saved_image_map: Dict[int, Path] = {} 
-    
-    # Get all document items in reading order
+    saved_image_map: Dict[int, Path] = {}
     document_items = list(doc.iterate_items())
-    
-    # Buffers for the final Markdown content and elements to skip
     final_markdown_elements = []
     items_to_skip_in_markdown = set()
-    
-    # Process items sequentially using the master list index
     for i, (item, _) in enumerate(document_items):
-        
-        # Skip items marked for elimination (like consumed captions)
         if i in items_to_skip_in_markdown:
             continue
-        
-        # 1. Handle Tables (Metadata and Local Save)
+
         if isinstance(item, TableItem):
             
             try:
@@ -615,7 +632,7 @@ def process_single_pdf(
                 if df.empty: continue
                 
                 table_counter += 1
-                csv_local_path = odir_local / f"{pdf_id}_table_{table_counter}.csv"
+                csv_local_path = odir_local / f"{Path(pdf_id).name}_table_{table_counter}.csv"
                 csv_s3_key = f"{output_s3_prefix}/{pdf_id}/{csv_local_path.name}" 
                 df.to_csv(csv_local_path, index=False)
                 
@@ -650,7 +667,6 @@ def process_single_pdf(
         # 2. Handle Images (PictureItem)
         elif isinstance(item, PictureItem):
             try:
-                # Get image data and check size filter
                 img = item.get_image(doc)
                 buf = BytesIO()
                 img.save(buf, format="PNG")
@@ -664,22 +680,16 @@ def process_single_pdf(
                 caption_text, items_to_skip = extract_caption_from_neighbors(doc, item, document_items, i)
                 if items_to_skip > 0:
                     items_to_skip_in_markdown.add(i + items_to_skip)
-                
-                # Filtering Logic
+
                 if file_size_kb > IMAGE_SIZE_THRESHOLD_KB:
                     image_counter_sequential += 1
-                    
-                    # Save image with a temporary name for sorting later
                     img_local_path = odir_local / "images" / f"temp_img_{image_counter_sequential}.png"
                     img_local_path.parent.mkdir(parents=True, exist_ok=True)
                     img_local_path.write_bytes(img_data)
                     saved_image_map[image_counter_sequential] = img_local_path
-                    
-                    # S3 key will use the final sequential name
-                    final_name = f"{pdf_id}_img_{image_counter_sequential}.png"
+                    final_name = f"{Path(pdf_id).name}_img_{image_counter_sequential}.png"
                     img_s3_key = f"{output_s3_prefix}/{pdf_id}/images/{final_name}"
-                    
-                    # Append Image to Markdown Buffer
+
                     image_tag = f"\n\n![Image](s3://{bucket_name}/{img_s3_key})"
                     if caption_text:
                         image_tag = f"\n\n[CAPTION]: {caption_text}\n" + image_tag
@@ -704,16 +714,11 @@ def process_single_pdf(
         # 3. Handle Text Items (including Formulas)
         elif isinstance(item, TextItem):
             text = item.text.strip()
-            
-            # Check if this TextItem should be skipped (consumed as a caption)
             if i in items_to_skip_in_markdown:
                  continue
-                 
-            # If it's a Formula, save metadata
             if item.label == DocItemLabel.FORMULA:
                 formula_counter = len([e for e in elements_metadata if e.element_type == 'formula']) + 1
-                
-                # Formula Image Filtering
+
                 formula_dir_local = odir_local / "formulas"
                 formula_img_local_path = formula_dir_local / f"formula_{formula_counter}.png"
                 formula_img_s3_key = None
@@ -725,11 +730,10 @@ def process_single_pdf(
                         image_counter_sequential += 1
                         saved_image_map[image_counter_sequential] = formula_img_local_path 
                         
-                        final_name = f"{pdf_id}_img_{image_counter_sequential}.png"
+                        final_name = f"{Path(pdf_id).name}_img_{image_counter_sequential}.png"
                         formula_img_s3_key = f"{output_s3_prefix}/{pdf_id}/images/{final_name}"
                         print(f"→ Formula Image saved (Size: {file_size_kb:.2f} KB)")
                         
-                        # Append Formula to Markdown Buffer
                         formula_tag = f"\n\n$$ {text} $$\n"
                         final_markdown_elements.append(formula_tag)
                         
@@ -745,29 +749,21 @@ def process_single_pdf(
                     language="en", extraction_timestamp=timestamp
                 )
                 elements_metadata.append(element_meta)
-            
-            # If it's standard text, headers, or lists
             else:
                 final_markdown_elements.append(text)
 
-        # 4. Handle other items (like PictureRef, etc.) by converting them to markdown
         else:
              final_markdown_elements.append(item.export_to_markdown())
-        
-    # Write the assembled content to the local Markdown file
+
+    md_local_path = odir_local / (Path(pdf_id).name + ".md") 
     md_local_path.write_text('\n\n'.join(final_markdown_elements), encoding="utf-8")
-    
-    # Rerun page header logic (it cleans up the content flow)
+
     add_page_headers_to_markdown(md_local_path) 
-    
-    # Recalculate text elements based on the cleaned Markdown (skipping consumed captions)
+
     text_elements = parse_markdown_to_text_elements(md_local_path, pdf_id, pdf_s3_key, md_s3_key, timestamp)
-    
-    # Append the new text elements which have proper section/page grouping
+
     elements_metadata.extend(text_elements)
     
-    # CONSOLIDATION STEP
-    # Final image count is the size of the saved map
     image_count = len(saved_image_map) 
     print(f"Extracted {table_counter} tables, {image_count} images saved, {len(text_elements)} text blocks")
 
@@ -808,12 +804,40 @@ def run_s3_docling_pipeline(
     processed_count = 0
     skipped_count = 0
     error_count = 0
-    
+    skipped_resumed_count = 0 
+    existing_pdf_ids = set()
+    try:
+        jsonl_local_path = local_cache_dir / Path(jsonl_s3_key).name
+        download_file_from_s3(bucket_name, jsonl_s3_key, jsonl_local_path)
+        with open(jsonl_local_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                try:
+                    metadata = json.loads(line)
+                    existing_pdf_ids.add(metadata.get('pdf_id'))
+                except json.JSONDecodeError:
+                    continue
+        print(f"Resuming pipeline. Found {len(existing_pdf_ids)} IDs in existing metadata.")
+        jsonl_local_path.unlink()
+    except ClientError as e:
+        if e.response['Error']['Code'] == "404":
+            print("No existing metadata file found. Starting from scratch.")
+        else:
+            logging.error(f"Error reading existing metadata: {e}")
+
+
     for pdf_s3_key in pdf_s3_keys:
         pdf_filename = Path(pdf_s3_key).name
         pdf_local_path = local_cache_dir / pdf_filename
         clean_upload_folder = None 
-        
+
+        pdf_id = create_pdf_id(pdf_s3_key, input_s3_prefix)
+        expected_output_prefix = f"{output_s3_prefix}/{pdf_id}/"
+
+        # Check 1: Resumption using S3 folder presence (safer for failed final uploads)
+        if check_s3_output_exists(bucket_name, expected_output_prefix):
+            print(f"⏩ Output found for {pdf_filename} (Prefix: {expected_output_prefix}). Skipping.")
+            skipped_resumed_count += 1
+            continue
         try:
             download_file_from_s3(bucket_name, pdf_s3_key, pdf_local_path)
 
@@ -830,12 +854,13 @@ def run_s3_docling_pipeline(
             pdf_output_cache_root = local_cache_dir / "outputs"
             elements, clean_upload_folder = process_single_pdf(
                 pdf_local_path, pdf_s3_key, pdf_output_cache_root, bucket_name, output_s3_prefix, 
+                input_s3_prefix, 
                 ocr_path, enable_formula_understanding=enable_formula_understanding
             )
             
             all_metadata.extend(elements)
             
-            pdf_id = create_pdf_id(pdf_s3_key)
+            # pdf_id is already calculated above
             final_s3_key = f"{output_s3_prefix}/{pdf_id}"
             print(f"Uploading consolidated files to s3://{bucket_name}/{final_s3_key}/...")
             upload_folder_to_s3_recursive(clean_upload_folder, bucket_name, final_s3_key)
@@ -856,12 +881,35 @@ def run_s3_docling_pipeline(
                 except Exception as e:
                     logging.warning(f"Failed to clean up temporary folder: {e}")
                 
-    # Save and Upload JSONL Metadata
+    # Save and Upload JSONL Metadata (Accumulating new and potentially existing metadata)
     if all_metadata:
+        final_metadata_list = []
+        final_pdf_ids = set()
+        
         jsonl_local_path = local_cache_dir / Path(jsonl_s3_key).name
+        try:
+            download_file_from_s3(bucket_name, jsonl_s3_key, jsonl_local_path)
+            with open(jsonl_local_path, 'r', encoding='utf-8') as f:
+                for line in f:
+                    try:
+                        metadata = json.loads(line)
+                        if metadata.get('pdf_id') not in final_pdf_ids:
+                            final_metadata_list.append(metadata)
+                            final_pdf_ids.add(metadata.get('pdf_id'))
+                    except json.JSONDecodeError:
+                        continue
+            jsonl_local_path.unlink()
+        except ClientError:
+            pass
+
+        for element in all_metadata:
+            if element.pdf_id not in final_pdf_ids:
+                final_metadata_list.append(element.model_dump())
+        
+        # Write and upload the complete, merged file
         with open(jsonl_local_path, 'w', encoding='utf-8') as jsonl_file:
-            for element in all_metadata:
-                jsonl_file.write(element.model_dump_json() + '\n')
+            for element_data in final_metadata_list:
+                jsonl_file.write(json.dumps(element_data) + '\n')
         
         upload_file_to_s3(jsonl_local_path, bucket_name, jsonl_s3_key)
         
@@ -873,12 +921,13 @@ def run_s3_docling_pipeline(
     print(f"S3 PIPELINE SUMMARY")
     print("="*60)
     print(f"Total PDFs found in S3: {len(pdf_s3_keys)}")
-    print(f"Successfully processed: {processed_count}")
+    print(f"Successfully processed (NEW): {processed_count}")
+    print(f"Skipped (Resumed/Already processed): {skipped_resumed_count}")
     print(f"Skipped (non-English): {skipped_count}")
     print(f"Errors: {error_count}")
-    print(f"Total elements extracted: {len(all_metadata)}")
+    print(f"Total elements extracted (THIS RUN): {len(all_metadata)}")
     print(f"Image Filter: KEEP > {IMAGE_SIZE_THRESHOLD_KB} KB")
-    print(f"\n📁 S3 Outputs stored in: s3://{bucket_name}/{output_s3_prefix}/PDF_ID/")
+    print(f"\n📁 S3 Outputs stored in: s3://{bucket_name}/{output_s3_prefix}/{{Class/Subject/Chapter_ID}}/")
     print(f"- JSONL Metadata: s3://{bucket_name}/{jsonl_s3_key}")
     print("="*60)
 
@@ -903,7 +952,7 @@ if __name__ == "__main__":
         print("Assuming PDFs are already in S3 input prefix.\n")
 
     # STEP 2: Run the S3-integrated processing pipeline
-    print(f"### STEP 2: RUNNING S3 PROCESSING PIPELINE ###")
+    print(f"### STEP 2: RUNNING S3 PROCESSING PIPELINE (RESUMING) ###")
     
     JSONL_S3_KEY = f"{OUTPUT_S3_PREFIX}/ncert_metadata.jsonl"
     

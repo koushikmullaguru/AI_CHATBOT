@@ -13,16 +13,16 @@ load_dotenv()
 
 class QdrantMigrator:
     def __init__(self):
-        # Cloud Qdrant configuration (source)
-        self.cloud_url = "https://cfff7e68-e8de-4a9c-bddc-47f434253e5c.us-west-1-0.aws.cloud.qdrant.io:6333"
-        self.cloud_api_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.YNToo6cbXc1DCP2hXuj5zpOGBXXhsUPYfieiGGrDUnE"
+        # Load environment variables
+        self.cloud_url = os.getenv("QDRANT_CLOUD_URL", "https://cfff7e68-e8de-4a9c-bddc-47f434253e5c.us-west-1-0.aws.cloud.qdrant.io:6333")
+        self.cloud_api_key = os.getenv("QDRANT_CLOUD_API_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.YNToo6cbXc1DCP2hXuj5zpOGBXXhsUPYfieiGGrDUnE")
         
-        self.local_url = "http://localhost:6333"
-        self.local_api_key = ""  # No API key needed for local instance
+        self.local_url = os.getenv("QDRANT_URL", "http://qdrant:6333")
+        self.local_api_key = os.getenv("QDRANT_API_KEY", "")  # No API key needed for local instance
         
         # Collection names to migrate
         self.collections = [
-            "ncert_multidoc_index9",
+            "ncert_multidoc_index2",
             "llm_semantic_cache"
         ]
         
@@ -31,8 +31,8 @@ class QdrantMigrator:
         self.local_client = QdrantClient(url=self.local_url, api_key=self.local_api_key)
         
     async def create_backup(self):
-        """Create a backup of all collections from Qdrant Cloud"""
-        logger.info("Starting backup process from Qdrant Cloud...")
+        """Create a backup of all collections from Local Qdrant"""
+        logger.info("Starting backup process from Local Qdrant...")
         
         backup_data = {}
         
@@ -41,7 +41,7 @@ class QdrantMigrator:
                 logger.info(f"Backing up collection: {collection_name}")
                 
                 # Get collection info
-                collection_info = self.cloud_client.get_collection(collection_name)
+                collection_info = self.local_client.get_collection(collection_name)
                 
                 # Get all records with scrolling
                 all_records = []
@@ -49,7 +49,7 @@ class QdrantMigrator:
                 limit = 100
                 
                 while True:
-                    records, next_offset = self.cloud_client.scroll(
+                    records, next_offset = self.local_client.scroll(
                         collection_name=collection_name,
                         limit=limit,
                         offset=offset,
@@ -111,8 +111,8 @@ class QdrantMigrator:
         return backup_data
     
     async def restore_backup(self, backup_data=None):
-        """Restore backup to local Qdrant instance"""
-        logger.info("Starting restore process to local Qdrant...")
+        """Restore backup to Qdrant Cloud instance"""
+        logger.info("Starting restore process to Qdrant Cloud...")
         
         if backup_data is None:
             # Load backup from file
@@ -129,18 +129,18 @@ class QdrantMigrator:
                 logger.info(f"Restoring collection: {collection_name}")
                 
                 # Check if collection exists
-                collections = self.local_client.get_collections()
+                collections = self.cloud_client.get_collections()
                 exists = any(c.name == collection_name for c in collections.collections)
                 
                 if not exists:
                     # Create collection with same configuration
-                    self.local_client.create_collection(
+                    self.cloud_client.create_collection(
                         collection_name=collection_name,
                         vectors_config=collection_data["config"]["vectors"]
                     )
                     logger.info(f"Created collection: {collection_name}")
                 else:
-                    logger.info(f"Collection {collection_name} already exists")
+                    logger.info(f"Collection {collection_name} already exists in cloud")
                 
                 # Prepare records for insertion
                 points = []
@@ -157,13 +157,13 @@ class QdrantMigrator:
                 batch_size = 100
                 for i in range(0, len(points), batch_size):
                     batch = points[i:i + batch_size]
-                    self.local_client.upsert(
+                    self.cloud_client.upsert(
                         collection_name=collection_name,
                         points=batch
                     )
                     logger.info(f"Inserted batch {i//batch_size + 1}/{(len(points)-1)//batch_size + 1} for {collection_name}")
                 
-                logger.info(f"Restored {len(points)} records to {collection_name}")
+                logger.info(f"Restored {len(points)} records to {collection_name} in cloud")
                 
             except Exception as e:
                 logger.error(f"Error restoring collection {collection_name}: {str(e)}")

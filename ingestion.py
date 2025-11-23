@@ -6,7 +6,6 @@ import logging
 from typing import List, Optional, Set, Dict, Any, Tuple
 from dotenv import load_dotenv
 
-# --- Qdrant and LlamaIndex Imports ---
 from llama_index.core import Document, Settings
 from llama_index.vector_stores.qdrant import QdrantVectorStore
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
@@ -15,16 +14,14 @@ from llama_index.core.node_parser import SentenceSplitter
 from qdrant_client import QdrantClient, models
 from qdrant_client.http.exceptions import UnexpectedResponse 
 
-# Set up logging
 logging.basicConfig(level=logging.INFO)
 
-# Load Environment Variables
 load_dotenv()
 
 # --- Configuration ---
 S3_BUCKET_NAME = os.getenv("S3_BUCKET_NAME", "askandlearn")
-S3_BASE_PATH = "output_extractions9/"
-QDRANT_COLLECTION_NAME = "ncert_multidoc_index9"
+S3_BASE_PATH = "outputs_NCERT_SCIENCE/"
+QDRANT_COLLECTION_NAME = "ncert_multidoc_index2"
 VECTOR_SIZE = 1024 
 
 # --- RAG OPTIMIZATION SETTINGS ---
@@ -33,7 +30,6 @@ CHUNK_OVERLAP = 25
 EMBED_MODEL_NAME = "BAAI/bge-m3"
 EMBED_BATCH_SIZE = 4
 
-# Increased timeout and batch size for robust upload
 QDRANT_CLIENT_TIMEOUT = 100 
 UPLOAD_BATCH_SIZE = 100
 
@@ -140,9 +136,8 @@ def setup_clients():
     # 2. Initialize Qdrant Client
     print(f"[SETUP LOG] Initializing Qdrant client with timeout={QDRANT_CLIENT_TIMEOUT}s...")
     qdrant_client = QdrantClient(
-        url=os.getenv("QDRANT_HOST"),
-        api_key=os.getenv("QDRANT_API_KEY"),
-        port=int(os.getenv("QDRANT_PORT", 6333)),
+        url=os.getenv("QDRANT_CLOUD_URL"),
+        api_key=os.getenv("QDRANT_CLOUD_API_KEY"),
         timeout=QDRANT_CLIENT_TIMEOUT 
     )
     
@@ -165,7 +160,6 @@ def setup_clients():
                 print(f"FATAL Qdrant creation error: {create_e}")
                 return None, None, None
         else:
-            # Handle other connection/setup errors
             print(f"FATAL Qdrant setup error during collection check: {e}. Check QDRANT_HOST/API_KEY permissions.")
             return None, None, None
 
@@ -212,27 +206,54 @@ def main_ingestion():
     
     for folder_prefix in sub_folders:
         folder_name = folder_prefix.strip('/').split('/')[-1]
-        md_file_key = f"{folder_prefix}{folder_name}.md"
+        print(f"\n--- Processing directory: {folder_name} ---")
         
-        print(f"\n--- Processing: {md_file_key} ---")
-        
+        # Recursively find all .md files in this directory
         try:
-            print(f"[S3 LOG] Fetching {md_file_key}...")
-            s3_object = s3_client.get_object(
+            paginator = s3_client.get_paginator('list_objects_v2')
+            page_iterator = paginator.paginate(
                 Bucket=S3_BUCKET_NAME,
-                Key=md_file_key
+                Prefix=folder_prefix
             )
-            markdown_content = s3_object['Body'].read().decode('utf-8')
             
-            if markdown_content:
-                documents_for_file = parse_markdown_with_metadata(markdown_content, md_file_key)
-                print(f"[S3 LOG] Prepared {len(documents_for_file)} total chunks (text + metadata).")
-                all_documents_to_ingest.extend(documents_for_file)
+            md_files = []
+            for page in page_iterator:
+                if 'Contents' in page:
+                    for obj in page['Contents']:
+                        key = obj['Key']
+                        if key.lower().endswith('.md') and not key.endswith('/'):
+                            md_files.append(key)
+            
+            print(f"[S3 LOG] Found {len(md_files)} markdown files in {folder_name}")
+            
+            if not md_files:
+                print(f"[S3 LOG] No markdown files found in {folder_name}")
+                continue
+                
+            # Process each markdown file
+            for md_file_key in md_files:
+                print(f"\n--- Processing: {md_file_key} ---")
+                
+                try:
+                    print(f"[S3 LOG] Fetching {md_file_key}...")
+                    s3_object = s3_client.get_object(
+                        Bucket=S3_BUCKET_NAME,
+                        Key=md_file_key
+                    )
+                    markdown_content = s3_object['Body'].read().decode('utf-8')
+                    
+                    if markdown_content:
+                        documents_for_file = parse_markdown_with_metadata(markdown_content, md_file_key)
+                        print(f"[S3 LOG] Prepared {len(documents_for_file)} total chunks (text + metadata).")
+                        all_documents_to_ingest.extend(documents_for_file)
 
-        except s3_client.exceptions.NoSuchKey:
-             print(f"[S3 LOG] Skipping {md_file_key}: Markdown file not found.")
+                except s3_client.exceptions.NoSuchKey:
+                    print(f"[S3 LOG] Skipping {md_file_key}: Markdown file not found.")
+                except Exception as e:
+                    print(f"An unexpected error occurred while processing {md_file_key}: {e}")
+
         except Exception as e:
-            print(f"An unexpected error occurred while processing {md_file_key}: {e}")
+            print(f"Error listing markdown files in {folder_name}: {e}")
 
     if not all_documents_to_ingest:
         print("\n No documents were successfully prepared. Aborting ingestion.")
@@ -258,7 +279,6 @@ def main_ingestion():
         if not np.any(embeddings_array):
             raise ValueError("🚨 Embedding model generated vectors, but they are ALL ZEROS!")
 
-        # Prepare payloads
         final_payloads = [doc.metadata.copy() for doc in all_documents_to_ingest]
 
         # 2. Upload to Qdrant using smaller, manageable batches
