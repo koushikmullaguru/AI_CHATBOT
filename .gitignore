@@ -9,3 +9,5 @@ unzip_file.py
 qdrant_backup.json
 qdrant_migration.py
 docling_process.py
+.env
+.env-example
