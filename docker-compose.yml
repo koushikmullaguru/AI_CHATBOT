@@ -1,3 +1,31 @@
+# version: '3.8'
+
+# services:
+#   app:
+#     image: school-rag-app:latest
+#     build: .
+#     ports:
+#       - "8501:8501"
+#     env_file:
+#       - .env
+#     volumes:
+#       - .:/app
+#     working_dir: /app
+    
+#     # New environment variable to force the Reranker onto the GPU
+#     environment:
+#       - RERANKER_DEVICE=cuda 
+      
+#     # Block to reserve and enable GPU access
+#     deploy:
+#       resources:
+#         reservations:
+#           devices:
+#             - driver: nvidia
+#               count: 1
+#               capabilities: [gpu]
+#     # --- END GPU ACCESS CONFIGURATION ---
+
 version: '3.8'
 
 services:

@@ -11,3 +11,4 @@ qdrant_migration.py
 docling_process.py
 .env
 .env-example
+src/node_modules/
