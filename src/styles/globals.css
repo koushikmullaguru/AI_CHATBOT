@@ -1,6 +1,16 @@
+/* File: koushikmullaguru/ai_chatbot/AI_CHATBOT-Q-A/src/styles/globals.css */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* CRITICAL FIX FOR DOUBLE SCROLL AND JUMPING */
+html, body, #root {
+  height: 100%; /* Force height to 100% of viewport */
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* CRITICAL: Prevents the main browser scrollbar */
+}
 
 @layer base {
   :root {
