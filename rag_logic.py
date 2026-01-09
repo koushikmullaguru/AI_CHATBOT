@@ -5,6 +5,7 @@ import re
 import numpy as np
 import logging 
 import sys 
+import json # ADDED: Import json for parsing LLM output
 from typing import List, Optional, Set, Dict, Any, Tuple
 from dotenv import load_dotenv
 from datetime import datetime
@@ -69,7 +70,7 @@ class RAGResponseHelper(BaseModel):
     sources: List[str]
     session_id: str
     cache_status: str = "MISS"
-    suggested_questions: List[str] = []
+    suggested_questions: List[str] = [] # FIELD USED FOR SUGGESTED QUESTIONS
 
 # ==================== UTILITY FUNCTIONS ====================
 def clean_latex_delimiters(text: str) -> str:
@@ -448,8 +449,20 @@ async def generate_rag_response(clients: Dict[str, Any], query: str, session_id:
         if cached_answer_raw:
             logging.info(f"✅ CACHE HIT on RAW query: {query}")
             cached_answer_raw = clean_latex_delimiters(cached_answer_raw)
-            await save_chat_entry(session_id, query, cached_answer_raw, ["[Semantic Cache]"], [])
-            return RAGResponseHelper(query=query, answer=cached_answer_raw, sources=["[Semantic Cache]"], session_id=session_id, cache_status="HIT")
+            # The cached answer may or may not contain suggested questions, so we parse it just in case
+            cached_answer_parts = cached_answer_raw.rsplit('{"suggested_questions":', 1)
+            cached_answer = cached_answer_parts[0].strip()
+            cached_suggestions = []
+            if len(cached_answer_parts) == 2:
+                 try:
+                    suggestions_data = json.loads('{"suggested_questions":' + cached_answer_parts[1].strip())
+                    cached_suggestions = suggestions_data.get("suggested_questions", [])
+                 except json.JSONDecodeError:
+                    pass
+
+            await save_chat_entry(session_id, query, cached_answer, ["[Semantic Cache]"], [])
+            # Return cached response with parsed answer and suggestions
+            return RAGResponseHelper(query=query, answer=cached_answer, sources=["[Semantic Cache]"], session_id=session_id, cache_status="HIT", suggested_questions=cached_suggestions)
     
     # EXPAND QUERY
     history_records = await get_chat_history(session_id, CHAT_HISTORY_LIMIT)
@@ -461,8 +474,21 @@ async def generate_rag_response(clients: Dict[str, Any], query: str, session_id:
         if cached_answer_expanded:
             logging.info(f"✅ CACHE HIT on EXPANDED query: {expanded_query}")
             cached_answer_expanded = clean_latex_delimiters(cached_answer_expanded)
-            await save_chat_entry(session_id, query, cached_answer_expanded, ["[Semantic Cache]"], [])
-            return RAGResponseHelper(query=query, answer=cached_answer_expanded, sources=["[Semantic Cache]"], session_id=session_id, cache_status="HIT")
+            
+            # The cached answer may or may not contain suggested questions, so we parse it just in case
+            cached_answer_parts = cached_answer_expanded.rsplit('{"suggested_questions":', 1)
+            cached_answer = cached_answer_parts[0].strip()
+            cached_suggestions = []
+            if len(cached_answer_parts) == 2:
+                 try:
+                    suggestions_data = json.loads('{"suggested_questions":' + cached_answer_parts[1].strip())
+                    cached_suggestions = suggestions_data.get("suggested_questions", [])
+                 except json.JSONDecodeError:
+                    pass
+            
+            await save_chat_entry(session_id, query, cached_answer, ["[Semantic Cache]"], [])
+            # Return cached response with parsed answer and suggestions
+            return RAGResponseHelper(query=query, answer=cached_answer, sources=["[Semantic Cache]"], session_id=session_id, cache_status="HIT", suggested_questions=cached_suggestions)
 
     history_str = format_chat_history(history_records)
 
@@ -510,27 +536,55 @@ If this appears to be a follow-up to the previous conversation:
 --- YOUR RESPONSE ---
 Answer the question directly and naturally.
 """
+    # APPEND NEW INSTRUCTION FOR SUGGESTED QUESTIONS
+    RAG_PROMPT_WITH_SUGGESTIONS = RAG_PROMPT + """
+
+**--- SUGGESTED QUESTIONS INSTRUCTION ---**
+9. At the very end of your response, output a single JSON object containing exactly 3 concise follow-up questions related to the answer you provided. 
+10. Use the format: `{"suggested_questions": ["Q1", "Q2", "Q3"]}`. 
+11. Place this JSON object on a new line immediately after your final answer paragraph. Do not include this JSON if the answer is "No specific context retrieved."
+"""
+
     try:
         response = await clients['llm'].chat.completions.create( 
-            model=LLM_MODEL_NAME, messages=[{"role": "user", "content": RAG_PROMPT}], temperature=0.1, 
+            model=LLM_MODEL_NAME, messages=[{"role": "user", "content": RAG_PROMPT_WITH_SUGGESTIONS}], temperature=0.1, 
         )
-        answer = response.choices[0].message.content.strip() 
+        answer_raw = response.choices[0].message.content.strip() 
+        
+        # --- PARSE ANSWER AND SUGGESTIONS ---
+        answer_parts = answer_raw.rsplit('{"suggested_questions":', 1)
+        answer = answer_parts[0].strip()
+        suggested_questions = []
+
+        if len(answer_parts) == 2:
+            json_part = '{"suggested_questions":' + answer_parts[1].strip()
+            try:
+                # Attempt to parse the JSON part
+                suggestions_data = json.loads(json_part)
+                suggested_questions = suggestions_data.get("suggested_questions", [])
+                if not isinstance(suggested_questions, list):
+                    suggested_questions = [] # Reset if not a list
+            except json.JSONDecodeError as e:
+                logging.warning(f"Failed to parse suggested questions JSON from LLM output: {e}")
+                suggested_questions = []
         
         # --- CLEANUP PIPELINE ---
         answer = re.sub(r'\\n', '\n', answer)
+        # Clean up any residual markdown table separators left after parsing, and other non-content markers
         answer = re.sub(r'^-+\|(-+\|)+-+\s*$', '', answer, flags=re.MULTILINE).strip()
-
         answer = clean_latex_delimiters(answer)
 
+        # Save the full raw response (answer + suggestions JSON) to cache, not just the answer text
         if cache_wrapper: 
             cache_key = query if expanded_query == query else expanded_query
-            cache_wrapper.save_cache(cache_key, answer)
+            cache_wrapper.save_cache(cache_key, answer_raw) 
         else:
             logging.info("Cache not available, skipping cache save operation")
         
         await save_chat_entry(session_id, query, answer, list(source_set), [c.text_snippet for c in context_chunks])
 
-        return RAGResponseHelper(query=query, answer=answer, sources=list(source_set), session_id=session_id, cache_status="MISS")
+        # Return the parsed answer and the list of suggested questions
+        return RAGResponseHelper(query=query, answer=answer, sources=list(source_set), session_id=session_id, cache_status="MISS", suggested_questions=suggested_questions)
 
     except Exception as e:
         raise Exception(f"LLM generation failed: {e}")

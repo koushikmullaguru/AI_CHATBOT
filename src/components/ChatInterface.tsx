@@ -635,20 +635,16 @@ export function ChatInterface({ user, selectedProfile, onSwitchProfile, onLogout
 
       const data = await response.json();
       
-      // Construct the final AI message from the API response
-      const aiMessage: Message = {
-        id: placeholderId,
-        content: data.answer || "Sorry, I couldn't generate a response.",
-        sender: 'ai',
-        timestamp: new Date(),
-        sources: data.sources || [],
-        cacheStatus: data.cache_status || 'ERROR',
-        suggestedQuestions: [
-            'Can you explain this concept in simpler terms?',
-            'Where exactly did this information come from?',
-            'Give me a practice problem on this topic.'
-        ],
-      };
+// Construct the final AI message from the API response
+const aiMessage: Message = {
+  id: placeholderId,
+  content: data.answer || "Sorry, I couldn't generate a response.",
+  sender: 'ai',
+  timestamp: new Date(),
+  sources: data.sources || [],
+  cacheStatus: data.cache_status || 'ERROR',
+  suggestedQuestions: data.suggested_questions || [],
+};
 
       // Replace the placeholder message with the real one
       setMessages(prevMessages => 
